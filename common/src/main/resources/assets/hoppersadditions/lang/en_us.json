@@ -1,4 +1,6 @@
 {
+  "itemGroup.hoppersadditions.hoppers_tab": "Hoppers Additions",
+
   "block.hoppersadditions.reinforced_hopper": "Reinforced Hopper",
   "container.reinforced_hopper": "Reinforced Hopper",
   "tooltip.hoppersadditions.reinforced_hopper.description": "Move items faster than a regular hopper.",
@@ -8,5 +10,10 @@
   "container.pickaxe_hopper": "Pickaxe Hopper",
   "tooltip.hoppersadditions.pickaxe_hopper.description": "Try to mine the block above when moving items",
   "tooltip.hoppersadditions.pickaxe_hopper.description_two": "Can be enchanted with fortune and efficiency",
-  "tooltip.hoppersadditions.pickaxe_hopper.speed": "Transfer Speed"
+  "tooltip.hoppersadditions.pickaxe_hopper.speed": "Transfer Speed",
+
+  "block.hoppersadditions.dropping_hopper": "Dropping Hopper",
+  "container.dropping_hopper": "Dropping Hopper",
+  "tooltip.hoppersadditions.dropping_hopper.description": "Drop item instead of moving them",
+  "tooltip.hoppersadditions.dropping_hopper.speed": "Transfer Speed"
 }
