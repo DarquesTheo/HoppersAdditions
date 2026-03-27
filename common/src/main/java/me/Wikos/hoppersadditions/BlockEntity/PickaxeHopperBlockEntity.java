@@ -29,6 +29,8 @@ public class PickaxeHopperBlockEntity extends ModdedHopperBlockEntity {
     private int miningCooldown = 0;
     private static final float IRON_EFFICIENCY = 6.0f;
 
+    private float lastHardness = -1.0f; //hardness of last hit block
+
     private int efficiencyLevel = 0;
     private int fortuneLevel = 0;
 
@@ -71,7 +73,13 @@ public class PickaxeHopperBlockEntity extends ModdedHopperBlockEntity {
         BlockState aboveState = level.getBlockState(abovePos);
         float hardness = aboveState.getDestroySpeed(level, abovePos);
 
-        if (aboveState.isAir() || hardness < 0) {
+        if (this.lastHardness != -1.0f && Float.compare(hardness, this.lastHardness) != 0) { //above block not same hardness has previous hit
+            resetBreakProgress(level, abovePos);
+        }
+
+        this.lastHardness = hardness;
+
+        if (aboveState.isAir() || hardness < 0) { //unbreakable block
             resetBreakProgress(level, abovePos);
             return;
         }
