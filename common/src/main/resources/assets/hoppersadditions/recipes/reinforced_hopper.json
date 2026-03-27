@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I I",
+    "ICI",
+    " O "
+  ],
+  "key": {
+    "O": { "item": "minecraft:obsidian" },
+    "C": { "item": "minecraft:chest" },
+    "I": { "item": "minecraft:iron_ingot"}
+  },
+  "result": {
+    "id": "hoppersadditions:reinforced_hopper",
+    "count": 1
+  }
+}

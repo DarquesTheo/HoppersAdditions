@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "hoppersadditions",
+  "version": "${version}",
+  "name": "Hoppers Additions",
+  "description": "",
+  "authors": [
+    "Wikos"
+  ],
+  "contact": {
+    "homepage": ""
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/hoppersadditions/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "me.Wikos.hoppersadditions.fabric.HoppersadditionsFabric"
+    ],
+    "client": [
+      "me.Wikos.hoppersadditions.fabric.client.HoppersadditionsFabricClient"
+    ]
+  },
+  "mixins": [
+    "hoppersadditions.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "architectury": ">=13.0.8",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
