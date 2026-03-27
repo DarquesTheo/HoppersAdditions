@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "facing=down":  { "model": "hoppersadditions:block/pickaxe_hopper" },
+    "facing=north": { "model": "hoppersadditions:block/pickaxe_hopper_side", "y": 0 },
+    "facing=south": { "model": "hoppersadditions:block/pickaxe_hopper_side", "y": 180 },
+    "facing=west":  { "model": "hoppersadditions:block/pickaxe_hopper_side", "y": 270 },
+    "facing=east":  { "model": "hoppersadditions:block/pickaxe_hopper_side", "y": 90 }
+  }
+}

@@ -6,9 +6,15 @@
     " O "
   ],
   "key": {
-    "O": { "item": "minecraft:obsidian" },
-    "C": { "item": "minecraft:chest" },
-    "I": { "item": "minecraft:iron_ingot"}
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    }
   },
   "result": {
     "id": "hoppersadditions:reinforced_hopper",

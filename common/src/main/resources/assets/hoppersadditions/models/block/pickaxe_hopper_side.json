@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/hopper_side",
+  "textures": {
+    "top": "hoppersadditions:block/pickaxe_hopper_top",
+    "side": "hoppersadditions:block/pickaxe_hopper_outside",
+    "inside": "hoppersadditions:block/pickaxe_hopper_inside"
+  }
+}
