@@ -126,7 +126,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         }
     }
 
-    private boolean inventoryFull() {
+    public boolean inventoryFull() {
         Iterator<ItemStack> itemStackIterator = this.items.iterator();
 
         ItemStack itemStack;
@@ -197,7 +197,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         return is;
     }
 
-    private static boolean isFullContainer(Container container, Direction direction) {
+    public static boolean isFullContainer(Container container, Direction direction) {
         int[] is = getSlots(container, direction);
         int var4 = is.length;
 
@@ -369,7 +369,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     @Nullable
-    private static Container getAttachedContainer(Level level, BlockPos blockPos, ModdedHopperBlockEntity hopperBlockEntity) {
+    public static Container getAttachedContainer(Level level, BlockPos blockPos, ModdedHopperBlockEntity hopperBlockEntity) {
         return getContainerAt(level, blockPos.relative(hopperBlockEntity.facing));
     }
 

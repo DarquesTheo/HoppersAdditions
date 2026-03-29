@@ -56,8 +56,14 @@ public class DroppingHopperBlock extends HopperBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction clickedFace = context.getClickedFace();
+
+        Direction targetDirection = clickedFace.getAxis() == Direction.Axis.Y
+                ? Direction.DOWN
+                : clickedFace.getOpposite();
+
         return this.defaultBlockState()
-                .setValue(FACING, Direction.DOWN)
+                .setValue(FACING, targetDirection)
                 .setValue(ENABLED, Boolean.TRUE);
     }
 
