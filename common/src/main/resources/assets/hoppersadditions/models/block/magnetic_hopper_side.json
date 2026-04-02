@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/hopper_side",
+  "textures": {
+    "top": "hoppersadditions:block/magnetic_hopper_top",
+    "side": "hoppersadditions:block/magnetic_hopper_outside",
+    "inside": "hoppersadditions:block/magnetic_hopper_inside"
+  }
+}

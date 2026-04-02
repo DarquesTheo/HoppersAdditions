@@ -15,5 +15,10 @@
   "block.hoppersadditions.dropping_hopper": "Dropping Hopper",
   "container.dropping_hopper": "Dropping Hopper",
   "tooltip.hoppersadditions.dropping_hopper.description": "Drop item instead of moving them",
-  "tooltip.hoppersadditions.dropping_hopper.speed": "Transfer Speed"
+  "tooltip.hoppersadditions.dropping_hopper.speed": "Transfer Speed",
+
+  "block.hoppersadditions.magnetic_hopper": "Magnetic Hopper",
+  "container.magnetic_hopper": "Magnetic Hopper",
+  "tooltip.hoppersadditions.magnetic_hopper.description": "Collect drop in a 9x9 area",
+  "tooltip.hoppersadditions.magnetic_hopper.speed": "Transfer Speed"
 }

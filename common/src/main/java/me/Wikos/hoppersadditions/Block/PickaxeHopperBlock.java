@@ -7,26 +7,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class PickaxeHopperBlock extends HopperBlock {
+public class PickaxeHopperBlock extends ModdedHopperBlock {
     public PickaxeHopperBlock(Properties properties) {
         super(properties);
 
@@ -54,34 +48,9 @@ public class PickaxeHopperBlock extends HopperBlock {
         }
     }
 
-    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
-        } else {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            if (blockEntity instanceof PickaxeHopperBlockEntity hopperEntity) {
-                player.openMenu(hopperEntity);
-            }
-            return InteractionResult.CONSUME;
-        }
-    }
-
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide ? null : createTickerHelper(type, Registration.PICKAXE_HOPPER_ENTITY.get(), PickaxeHopperBlockEntity::tick);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction clickedFace = context.getClickedFace();
-
-        Direction targetDirection = clickedFace.getAxis() == Direction.Axis.Y
-                ? Direction.DOWN
-                : clickedFace.getOpposite();
-
-        return this.defaultBlockState()
-                .setValue(FACING, targetDirection)
-                .setValue(ENABLED, Boolean.TRUE);
     }
 
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {

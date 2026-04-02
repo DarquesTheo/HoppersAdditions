@@ -99,7 +99,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         if (!hopperBlockEntity.isOnCooldown()) {
             hopperBlockEntity.setCooldown(0);
             tryMoveItems(level, blockPos, blockState, hopperBlockEntity, () -> {
-                return suckInItems(level, hopperBlockEntity);
+                return hopperBlockEntity.suckInItems(level);
             });
         }
 
@@ -212,10 +212,10 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         return true;
     }
 
-    public static boolean suckInItems(Level level, Hopper hopper) {
-        BlockPos blockPos = BlockPos.containing(hopper.getLevelX(), hopper.getLevelY() + 1.0, hopper.getLevelZ());
+    public boolean suckInItems(Level level) {
+        BlockPos blockPos = BlockPos.containing(this.getLevelX(), this.getLevelY() + 1.0, this.getLevelZ());
         BlockState blockState = level.getBlockState(blockPos);
-        Container container = getSourceContainer(level, hopper, blockPos, blockState);
+        Container container = getSourceContainer(level, this, blockPos, blockState);
         if (container != null) {
             Direction direction = Direction.DOWN;
             int[] var11 = getSlots(container, direction);
@@ -223,20 +223,20 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
 
             for(int var8 = 0; var8 < var12; ++var8) {
                 int i = var11[var8];
-                if (tryTakeInItemFromSlot(hopper, container, i, direction)) {
+                if (tryTakeInItemFromSlot(this, container, i, direction)) {
                     return true;
                 }
             }
 
             return false;
         } else {
-            boolean bl = hopper.isGridAligned() && blockState.isCollisionShapeFullBlock(level, blockPos) && !blockState.is(BlockTags.DOES_NOT_BLOCK_HOPPERS);
+            boolean bl = this.isGridAligned() && blockState.isCollisionShapeFullBlock(level, blockPos) && !blockState.is(BlockTags.DOES_NOT_BLOCK_HOPPERS);
             if (!bl) {
-                Iterator var6 = getItemsAtAndAbove(level, hopper).iterator();
+                Iterator var6 = getItemsAtAndAbove(level, this).iterator();
 
                 while(var6.hasNext()) {
                     ItemEntity itemEntity = (ItemEntity)var6.next();
-                    if (addItem(hopper, itemEntity)) {
+                    if (addItem(this, itemEntity)) {
                         return true;
                     }
                 }

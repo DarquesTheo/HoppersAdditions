@@ -25,7 +25,7 @@ public class DroppingHopperBlockEntity extends ModdedHopperBlockEntity{
         blockEntity.tickedGameTime = level.getGameTime();
         if (!blockEntity.isOnCooldown()) {
             blockEntity.setCooldown(0);
-            tryDropItems(level, pos, state, blockEntity, () -> ModdedHopperBlockEntity.suckInItems(level, blockEntity));
+            tryDropItems(level, pos, state, blockEntity, () -> blockEntity.suckInItems(level));
         }
     }
 
