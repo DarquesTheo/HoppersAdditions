@@ -2,14 +2,8 @@ package me.Wikos.hoppersadditions;
 
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
-import me.Wikos.hoppersadditions.Block.DroppingHopperBlock;
-import me.Wikos.hoppersadditions.Block.MagneticHopperBlock;
-import me.Wikos.hoppersadditions.Block.PickaxeHopperBlock;
-import me.Wikos.hoppersadditions.Block.ReinforcedHopperBlock;
-import me.Wikos.hoppersadditions.BlockEntity.DroppingHopperBlockEntity;
-import me.Wikos.hoppersadditions.BlockEntity.MagneticHopperBlockEntity;
-import me.Wikos.hoppersadditions.BlockEntity.PickaxeHopperBlockEntity;
-import me.Wikos.hoppersadditions.BlockEntity.ReinforcedHopperBlockEntity;
+import me.Wikos.hoppersadditions.Block.*;
+import me.Wikos.hoppersadditions.BlockEntity.*;
 import me.Wikos.hoppersadditions.Item.PickaxeHopperItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -42,6 +36,10 @@ public class Registration {
     public static final RegistrySupplier<Block> MAGNETIC_HOPPER = BLOCKS.register("magnetic_hopper",
             () -> new MagneticHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
 
+    public static final RegistrySupplier<Block> FILTER_HOPPER = BLOCKS.register("filter_hopper",
+            () -> new FilterHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
+
+
     public static final RegistrySupplier<Item> REINFORCED_HOPPER_ITEM = ITEMS.register("reinforced_hopper",
             () -> new BlockItem(REINFORCED_HOPPER.get(), new Item.Properties()));
 
@@ -53,6 +51,10 @@ public class Registration {
 
     public static final RegistrySupplier<Item> MAGNETIC_HOPPER_ITEM = ITEMS.register("magnetic_hopper",
             () -> new BlockItem(MAGNETIC_HOPPER.get(), new Item.Properties()));
+
+    public static final RegistrySupplier<Item> FILTER_HOPPER_ITEM = ITEMS.register("filter_hopper",
+            () -> new BlockItem(FILTER_HOPPER.get(), new Item.Properties()));
+
 
     public static final RegistrySupplier<BlockEntityType<ReinforcedHopperBlockEntity>> REINFORCED_HOPPER_ENTITY =
             BLOCK_ENTITIES.register("reinforced_hopper", () ->
@@ -70,6 +72,10 @@ public class Registration {
             BLOCK_ENTITIES.register("magnetic_hopper", () ->
                     BlockEntityType.Builder.of(MagneticHopperBlockEntity::new, MAGNETIC_HOPPER.get()).build(null));
 
+    public static final RegistrySupplier<BlockEntityType<FilterHopperBlockEntity>> FILTER_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("filter_hopper", () ->
+                    BlockEntityType.Builder.of(FilterHopperBlockEntity::new, FILTER_HOPPER.get()).build(null));
+
     public static final RegistrySupplier<CreativeModeTab> HOPPER_TAB = TABS.register("hoppers_tab", () ->
             CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                     .title(Component.translatable("itemGroup." + MOD_ID + ".hoppers_tab"))
@@ -79,6 +85,7 @@ public class Registration {
                         output.accept(PICKAXE_HOPPER_ITEM.get());
                         output.accept(DROPPING_HOPPER_ITEM.get());
                         output.accept(MAGNETIC_HOPPER_ITEM.get());
+                        output.accept(FILTER_HOPPER_ITEM.get());
                     })
                     .build()
     );

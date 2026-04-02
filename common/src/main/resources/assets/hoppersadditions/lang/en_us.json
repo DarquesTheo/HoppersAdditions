@@ -20,5 +20,11 @@
   "block.hoppersadditions.magnetic_hopper": "Magnetic Hopper",
   "container.magnetic_hopper": "Magnetic Hopper",
   "tooltip.hoppersadditions.magnetic_hopper.description": "Collect drop in a 9x9 area",
-  "tooltip.hoppersadditions.magnetic_hopper.speed": "Transfer Speed"
+  "tooltip.hoppersadditions.magnetic_hopper.speed": "Transfer Speed",
+
+  "block.hoppersadditions.filter_hopper": "Filter Hopper",
+  "container.filter_hopper": "Filter Hopper",
+  "tooltip.hoppersadditions.filter_hopper.description": "Can only collect filtered item (item in the last slot)",
+  "tooltip.hoppersadditions.filter_hopper.speed": "Transfer Speed",
+  "message.filter_set": "Item Filter type set to "
 }

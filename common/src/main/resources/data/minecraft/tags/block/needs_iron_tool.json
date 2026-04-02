@@ -3,6 +3,7 @@
     "hoppersadditions:reinforced_hopper",
     "hoppersadditions:pickaxe_hopper",
     "hoppersadditions:dropping_hopper",
-    "hoppersadditions:magnetic_hopper"
+    "hoppersadditions:magnetic_hopper",
+    "hoppersadditions:filter_hopper"
   ]
 }

@@ -168,7 +168,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         return false;
     }
 
-    private static int[] getSlots(Container container, Direction direction) {
+    static int[] getSlots(Container container, Direction direction) {
         if (container instanceof WorldlyContainer worldlyContainer) {
             return worldlyContainer.getSlotsForFace(direction);
         } else {
@@ -246,7 +246,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         }
     }
 
-    private static boolean tryTakeInItemFromSlot(Hopper hopper, Container container, int i, Direction direction) {
+    static boolean tryTakeInItemFromSlot(Hopper hopper, Container container, int i, Direction direction) {
         ItemStack itemStack = container.getItem(i);
         if (!itemStack.isEmpty() && canTakeItemFromContainer(hopper, container, itemStack, i, direction)) {
             int j = itemStack.getCount();
