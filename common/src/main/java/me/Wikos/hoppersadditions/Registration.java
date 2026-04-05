@@ -2,8 +2,8 @@ package me.Wikos.hoppersadditions;
 
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
-import me.Wikos.hoppersadditions.Block.*;
-import me.Wikos.hoppersadditions.BlockEntity.*;
+import me.Wikos.hoppersadditions.Block.Hoppers.*;
+import me.Wikos.hoppersadditions.BlockEntity.Hoppers.*;
 import me.Wikos.hoppersadditions.Item.PickaxeHopperItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -24,6 +24,7 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(MOD_ID, Registries.BLOCK_ENTITY_TYPE);
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(MOD_ID, Registries.CREATIVE_MODE_TAB);
 
+    // --- BLOCKS ---
     public static final RegistrySupplier<Block> REINFORCED_HOPPER = BLOCKS.register("reinforced_hopper",
             () -> new ReinforcedHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
 
@@ -39,6 +40,13 @@ public class Registration {
     public static final RegistrySupplier<Block> FILTER_HOPPER = BLOCKS.register("filter_hopper",
             () -> new FilterHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
 
+    public static final RegistrySupplier<Block> MONSTER_HOPPER = BLOCKS.register("monster_hopper",
+            () -> new MobHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER), true));
+
+    public static final RegistrySupplier<Block> ANIMAL_HOPPER = BLOCKS.register("animal_hopper",
+            () -> new MobHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER), false));
+
+    // --- ITEMS ---
 
     public static final RegistrySupplier<Item> REINFORCED_HOPPER_ITEM = ITEMS.register("reinforced_hopper",
             () -> new BlockItem(REINFORCED_HOPPER.get(), new Item.Properties()));
@@ -55,6 +63,13 @@ public class Registration {
     public static final RegistrySupplier<Item> FILTER_HOPPER_ITEM = ITEMS.register("filter_hopper",
             () -> new BlockItem(FILTER_HOPPER.get(), new Item.Properties()));
 
+    public static final RegistrySupplier<Item> MONSTER_HOPPER_ITEM = ITEMS.register("monster_hopper",
+            () -> new BlockItem(MONSTER_HOPPER.get(), new Item.Properties()));
+
+    public static final RegistrySupplier<Item> ANIMAL_HOPPER_ITEM = ITEMS.register("animal_hopper",
+            () -> new BlockItem(ANIMAL_HOPPER.get(), new Item.Properties()));
+
+    // --- BLOCKS_ENTITY ---
 
     public static final RegistrySupplier<BlockEntityType<ReinforcedHopperBlockEntity>> REINFORCED_HOPPER_ENTITY =
             BLOCK_ENTITIES.register("reinforced_hopper", () ->
@@ -76,6 +91,14 @@ public class Registration {
             BLOCK_ENTITIES.register("filter_hopper", () ->
                     BlockEntityType.Builder.of(FilterHopperBlockEntity::new, FILTER_HOPPER.get()).build(null));
 
+    public static final RegistrySupplier<BlockEntityType<MobHopperBlockEntity>> MONSTER_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("monster_hopper", () ->
+                    BlockEntityType.Builder.of((pos, state) -> new MobHopperBlockEntity(pos, state, true), MONSTER_HOPPER.get()).build(null));
+
+    public static final RegistrySupplier<BlockEntityType<MobHopperBlockEntity>> ANIMAL_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("animal_hopper", () ->
+                    BlockEntityType.Builder.of((pos, state) -> new MobHopperBlockEntity(pos, state, false), ANIMAL_HOPPER.get()).build(null));
+
     public static final RegistrySupplier<CreativeModeTab> HOPPER_TAB = TABS.register("hoppers_tab", () ->
             CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                     .title(Component.translatable("itemGroup." + MOD_ID + ".hoppers_tab"))
@@ -86,6 +109,8 @@ public class Registration {
                         output.accept(DROPPING_HOPPER_ITEM.get());
                         output.accept(MAGNETIC_HOPPER_ITEM.get());
                         output.accept(FILTER_HOPPER_ITEM.get());
+                        output.accept(MONSTER_HOPPER_ITEM.get());
+                        output.accept(ANIMAL_HOPPER_ITEM.get());
                     })
                     .build()
     );

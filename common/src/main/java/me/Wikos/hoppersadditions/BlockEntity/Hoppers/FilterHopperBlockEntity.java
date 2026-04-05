@@ -1,5 +1,6 @@
-package me.Wikos.hoppersadditions.BlockEntity;
+package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
+import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
 import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

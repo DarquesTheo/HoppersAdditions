@@ -1,6 +1,7 @@
-package me.Wikos.hoppersadditions.Block;
+package me.Wikos.hoppersadditions.Block.Hoppers;
 
-import me.Wikos.hoppersadditions.BlockEntity.MagneticHopperBlockEntity;
+import me.Wikos.hoppersadditions.Block.ModdedHopperBlock;
+import me.Wikos.hoppersadditions.BlockEntity.Hoppers.DroppingHopperBlockEntity;
 import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -17,8 +18,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class MagneticHopperBlock extends ModdedHopperBlock {
-    public MagneticHopperBlock(Properties properties) {
+public class DroppingHopperBlock extends ModdedHopperBlock {
+    public DroppingHopperBlock(Properties properties) {
         super(properties);
 
         this.registerDefaultState(this.stateDefinition.any()
@@ -28,21 +29,20 @@ public class MagneticHopperBlock extends ModdedHopperBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new MagneticHopperBlockEntity(pos, state);
+        return new DroppingHopperBlockEntity(pos, state);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.MAGNETIC_HOPPER_ENTITY.get(), MagneticHopperBlockEntity::tick);
+        return level.isClientSide ? null : createTickerHelper(type, Registration.DROPPING_HOPPER_ENTITY.get(), DroppingHopperBlockEntity::tick);
     }
 
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.magnetic_hopper.description")
+        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.dropping_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.magnetic_hopper.speed")
+        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 1x"))
                 .withStyle(ChatFormatting.GOLD));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 }
-

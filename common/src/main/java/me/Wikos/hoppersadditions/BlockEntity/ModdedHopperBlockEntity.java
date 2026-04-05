@@ -1,5 +1,6 @@
 package me.Wikos.hoppersadditions.BlockEntity;
 
+import me.Wikos.hoppersadditions.BlockEntity.Hoppers.ReinforcedHopperBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -168,7 +169,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         return false;
     }
 
-    static int[] getSlots(Container container, Direction direction) {
+    protected static int[] getSlots(Container container, Direction direction) {
         if (container instanceof WorldlyContainer worldlyContainer) {
             return worldlyContainer.getSlotsForFace(direction);
         } else {
@@ -246,7 +247,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
         }
     }
 
-    static boolean tryTakeInItemFromSlot(Hopper hopper, Container container, int i, Direction direction) {
+    protected static boolean tryTakeInItemFromSlot(Hopper hopper, Container container, int i, Direction direction) {
         ItemStack itemStack = container.getItem(i);
         if (!itemStack.isEmpty() && canTakeItemFromContainer(hopper, container, itemStack, i, direction)) {
             int j = itemStack.getCount();

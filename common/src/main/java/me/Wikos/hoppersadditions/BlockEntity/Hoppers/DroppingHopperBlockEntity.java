@@ -1,10 +1,10 @@
-package me.Wikos.hoppersadditions.BlockEntity;
+package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
+import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
 import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HopperBlock;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BooleanSupplier;
 
-public class DroppingHopperBlockEntity extends ModdedHopperBlockEntity{
+public class DroppingHopperBlockEntity extends ModdedHopperBlockEntity {
     public static final int MOVE_ITEM_SPEED = 8;
 
     public DroppingHopperBlockEntity(BlockPos pos, BlockState state) {

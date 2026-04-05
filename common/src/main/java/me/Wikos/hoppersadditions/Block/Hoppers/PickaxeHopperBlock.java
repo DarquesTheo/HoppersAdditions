@@ -1,6 +1,7 @@
-package me.Wikos.hoppersadditions.Block;
+package me.Wikos.hoppersadditions.Block.Hoppers;
 
-import me.Wikos.hoppersadditions.BlockEntity.PickaxeHopperBlockEntity;
+import me.Wikos.hoppersadditions.Block.ModdedHopperBlock;
+import me.Wikos.hoppersadditions.BlockEntity.Hoppers.PickaxeHopperBlockEntity;
 import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -58,7 +59,7 @@ public class PickaxeHopperBlock extends ModdedHopperBlock {
                 .withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.pickaxe_hopper.description_two")
                 .withStyle(ChatFormatting.DARK_PURPLE));
-        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.pickaxe_hopper.speed")
+        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 0.5x"))
                 .withStyle(ChatFormatting.GOLD));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);

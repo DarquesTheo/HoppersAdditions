@@ -1,30 +1,35 @@
 {
   "itemGroup.hoppersadditions.hoppers_tab": "Hoppers Additions",
 
+  "tooltip.hoppersadditions.hopper.speed": "Transfer Speed",
+
   "block.hoppersadditions.reinforced_hopper": "Reinforced Hopper",
   "container.reinforced_hopper": "Reinforced Hopper",
   "tooltip.hoppersadditions.reinforced_hopper.description": "Move items faster than a regular hopper.",
-  "tooltip.hoppersadditions.reinforced_hopper.speed": "Transfer Speed",
 
   "block.hoppersadditions.pickaxe_hopper": "Pickaxe Hopper",
   "container.pickaxe_hopper": "Pickaxe Hopper",
   "tooltip.hoppersadditions.pickaxe_hopper.description": "Try to mine the block above when moving items",
   "tooltip.hoppersadditions.pickaxe_hopper.description_two": "Can be enchanted with fortune and efficiency",
-  "tooltip.hoppersadditions.pickaxe_hopper.speed": "Transfer Speed",
 
   "block.hoppersadditions.dropping_hopper": "Dropping Hopper",
   "container.dropping_hopper": "Dropping Hopper",
   "tooltip.hoppersadditions.dropping_hopper.description": "Drop item instead of moving them",
-  "tooltip.hoppersadditions.dropping_hopper.speed": "Transfer Speed",
 
   "block.hoppersadditions.magnetic_hopper": "Magnetic Hopper",
   "container.magnetic_hopper": "Magnetic Hopper",
   "tooltip.hoppersadditions.magnetic_hopper.description": "Collect drop in a 9x9 area",
-  "tooltip.hoppersadditions.magnetic_hopper.speed": "Transfer Speed",
 
   "block.hoppersadditions.filter_hopper": "Filter Hopper",
   "container.filter_hopper": "Filter Hopper",
   "tooltip.hoppersadditions.filter_hopper.description": "Can only collect filtered item (item in the last slot)",
-  "tooltip.hoppersadditions.filter_hopper.speed": "Transfer Speed",
-  "message.filter_set": "Item Filter type set to "
+  "message.filter_set": "Item Filter type set to ",
+
+  "block.hoppersadditions.monster_hopper": "Monster Hopper",
+  "container.monster_hopper": "Monster Hopper",
+  "tooltip.hoppersadditions.monster_hopper.description": "Move monsters instead of items",
+
+  "block.hoppersadditions.animal_hopper": "Animal Hopper",
+  "container.animal_hopper": "Animal Hopper",
+  "tooltip.hoppersadditions.animal_hopper.description": "Move animals instead of items"
 }

@@ -4,6 +4,8 @@
     "hoppersadditions:pickaxe_hopper",
     "hoppersadditions:dropping_hopper",
     "hoppersadditions:magnetic_hopper",
-    "hoppersadditions:filter_hopper"
+    "hoppersadditions:filter_hopper",
+    "hoppersadditions:monster_hopper",
+    "hoppersadditions:animal_hopper"
   ]
 }

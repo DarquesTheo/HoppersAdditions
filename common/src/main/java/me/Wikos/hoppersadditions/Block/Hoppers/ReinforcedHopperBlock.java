@@ -1,6 +1,7 @@
-package me.Wikos.hoppersadditions.Block;
+package me.Wikos.hoppersadditions.Block.Hoppers;
 
-import me.Wikos.hoppersadditions.BlockEntity.ReinforcedHopperBlockEntity;
+import me.Wikos.hoppersadditions.Block.ModdedHopperBlock;
+import me.Wikos.hoppersadditions.BlockEntity.Hoppers.ReinforcedHopperBlockEntity;
 import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,7 @@ public class ReinforcedHopperBlock extends ModdedHopperBlock {
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.reinforced_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.reinforced_hopper.speed")
+        tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 2x"))
                 .withStyle(ChatFormatting.GOLD));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
