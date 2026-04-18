@@ -6,6 +6,8 @@
     "hoppersadditions:magnetic_hopper",
     "hoppersadditions:filter_hopper",
     "hoppersadditions:monster_hopper",
-    "hoppersadditions:animal_hopper"
+    "hoppersadditions:animal_hopper",
+    "hoppersadditions:batch_hopper",
+    "hoppersadditions:small_batch_hopper"
   ]
 }

@@ -31,5 +31,13 @@
 
   "block.hoppersadditions.animal_hopper": "Animal Hopper",
   "container.animal_hopper": "Animal Hopper",
-  "tooltip.hoppersadditions.animal_hopper.description": "Move animals instead of items"
+  "tooltip.hoppersadditions.animal_hopper.description": "Move animals instead of items",
+
+  "block.hoppersadditions.batch_hopper": "Batch Hopper",
+  "container.batch_hopper": "Batch Hopper",
+  "tooltip.hoppersadditions.batch_hopper.description": "Transfers items only when the stack is full",
+
+  "block.hoppersadditions.small_batch_hopper": "Small Batch Hopper",
+  "container.small_batch_hopper": "Small Batch Hopper",
+  "tooltip.hoppersadditions.small_batch_hopper.description": "Transfers items in batches of 8"
 }

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hoppersadditions:small_batch_hopper"
+    }
+  ],
+  "result": {
+    "id": "hoppersadditions:batch_hopper",
+    "count": 1
+  }
+}
+

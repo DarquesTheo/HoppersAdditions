@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I I",
+    "ICI",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:barrel"
+    }
+  },
+  "result": {
+    "id": "hoppersadditions:batch_hopper",
+    "count": 1
+  }
+}

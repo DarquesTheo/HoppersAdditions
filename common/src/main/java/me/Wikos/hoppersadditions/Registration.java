@@ -46,6 +46,12 @@ public class Registration {
     public static final RegistrySupplier<Block> ANIMAL_HOPPER = BLOCKS.register("animal_hopper",
             () -> new MobHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER), false));
 
+    public static final RegistrySupplier<Block> BATCH_HOPPER = BLOCKS.register("batch_hopper",
+            () -> new me.Wikos.hoppersadditions.Block.Hoppers.BatchHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER), 64));
+
+    public static final RegistrySupplier<Block> SMALL_BATCH_HOPPER = BLOCKS.register("small_batch_hopper",
+            () -> new me.Wikos.hoppersadditions.Block.Hoppers.BatchHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER), 8));
+
     // --- ITEMS ---
 
     public static final RegistrySupplier<Item> REINFORCED_HOPPER_ITEM = ITEMS.register("reinforced_hopper",
@@ -68,6 +74,12 @@ public class Registration {
 
     public static final RegistrySupplier<Item> ANIMAL_HOPPER_ITEM = ITEMS.register("animal_hopper",
             () -> new BlockItem(ANIMAL_HOPPER.get(), new Item.Properties()));
+
+    public static final RegistrySupplier<Item> BATCH_HOPPER_ITEM = ITEMS.register("batch_hopper",
+            () -> new BlockItem(BATCH_HOPPER.get(), new Item.Properties()));
+
+    public static final RegistrySupplier<Item> SMALL_BATCH_HOPPER_ITEM = ITEMS.register("small_batch_hopper",
+            () -> new BlockItem(SMALL_BATCH_HOPPER.get(), new Item.Properties()));
 
     // --- BLOCKS_ENTITY ---
 
@@ -99,6 +111,15 @@ public class Registration {
             BLOCK_ENTITIES.register("animal_hopper", () ->
                     BlockEntityType.Builder.of((pos, state) -> new MobHopperBlockEntity(pos, state, false), ANIMAL_HOPPER.get()).build(null));
 
+    public static final RegistrySupplier<BlockEntityType<me.Wikos.hoppersadditions.BlockEntity.Hoppers.BatchHopperBlockEntity>> BATCH_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("batch_hopper", () ->
+                    BlockEntityType.Builder.of((pos, state) -> {
+                        int amount = state.getBlock() == SMALL_BATCH_HOPPER.get() ? 8 : 64;
+                        return new me.Wikos.hoppersadditions.BlockEntity.Hoppers.BatchHopperBlockEntity(pos, state, amount);
+                    }, BATCH_HOPPER.get(), SMALL_BATCH_HOPPER.get()).build(null));
+
+    // --- TABS ---
+
     public static final RegistrySupplier<CreativeModeTab> HOPPER_TAB = TABS.register("hoppers_tab", () ->
             CreativeModeTab.builder(CreativeModeTab.Row.TOP, 0)
                     .title(Component.translatable("itemGroup." + MOD_ID + ".hoppers_tab"))
@@ -111,6 +132,8 @@ public class Registration {
                         output.accept(FILTER_HOPPER_ITEM.get());
                         output.accept(MONSTER_HOPPER_ITEM.get());
                         output.accept(ANIMAL_HOPPER_ITEM.get());
+                        output.accept(BATCH_HOPPER_ITEM.get());
+                        output.accept(SMALL_BATCH_HOPPER_ITEM.get());
                     })
                     .build()
     );
