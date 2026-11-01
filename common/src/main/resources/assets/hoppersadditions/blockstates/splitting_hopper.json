@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "facing=north": { "model": "hoppersadditions:block/splitting_hopper" },
+    "facing=east": { "model": "hoppersadditions:block/splitting_hopper", "y": 90 },
+    "facing=south": { "model": "hoppersadditions:block/splitting_hopper", "y": 180 },
+    "facing=west": { "model": "hoppersadditions:block/splitting_hopper", "y": 270 },
+    "facing=down": { "model": "hoppersadditions:block/splitting_hopper" }
+  }
+}

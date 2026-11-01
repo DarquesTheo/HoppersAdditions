@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "facing=down": { "model": "hoppersadditions:block/pulse_hopper" },
+    "facing=north": { "model": "hoppersadditions:block/pulse_hopper_side" },
+    "facing=south": { "model": "hoppersadditions:block/pulse_hopper_side", "y": 180 },
+    "facing=west": { "model": "hoppersadditions:block/pulse_hopper_side", "y": 270 },
+    "facing=east": { "model": "hoppersadditions:block/pulse_hopper_side", "y": 90 }
+  }
+}

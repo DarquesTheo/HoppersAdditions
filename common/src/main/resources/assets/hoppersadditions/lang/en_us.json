@@ -1,7 +1,17 @@
 {
   "itemGroup.hoppersadditions.hoppers_tab": "Hoppers Additions",
 
+  "block.hoppersadditions.pulse_hopper": "Pulse Hopper",
+  "container.pulse_hopper": "Pulse Hopper",
+  "tooltip.hoppersadditions.pulse_hopper.description": "One item per redstone pulse.",
+  "tooltip.hoppersadditions.pulse_hopper.input": "Collects only while unpowered.",
+  "tooltip.hoppersadditions.pulse_hopper.failed": "Failed pulses are lost.",
+
   "tooltip.hoppersadditions.hopper.speed": "Transfer Speed",
+
+  "block.hoppersadditions.overflow_hopper": "Overflow Hopper",
+  "container.overflow_hopper": "Overflow Hopper",
+  "tooltip.hoppersadditions.overflow_hopper.description": "Sends items forward first, then down if that item cannot fit.",
 
   "block.hoppersadditions.reinforced_hopper": "Reinforced Hopper",
   "container.reinforced_hopper": "Reinforced Hopper",
@@ -39,5 +49,9 @@
 
   "block.hoppersadditions.small_batch_hopper": "Small Batch Hopper",
   "container.small_batch_hopper": "Small Batch Hopper",
-  "tooltip.hoppersadditions.small_batch_hopper.description": "Transfers items in batches of 8"
+  "tooltip.hoppersadditions.small_batch_hopper.description": "Transfers items in batches of 8",
+
+  "block.hoppersadditions.splitting_hopper": "Splitting Hopper",
+  "container.splitting_hopper": "Splitting Hopper",
+  "tooltip.hoppersadditions.splitting_hopper.description": "Alternates forward, then down. Waits if the next output is blocked."
 }

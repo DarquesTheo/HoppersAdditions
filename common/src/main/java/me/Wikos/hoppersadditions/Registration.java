@@ -25,6 +25,9 @@ public class Registration {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(MOD_ID, Registries.CREATIVE_MODE_TAB);
 
     // --- BLOCKS ---
+    public static final RegistrySupplier<Block> OVERFLOW_HOPPER = BLOCKS.register("overflow_hopper",
+            () -> new OverflowHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
+
     public static final RegistrySupplier<Block> REINFORCED_HOPPER = BLOCKS.register("reinforced_hopper",
             () -> new ReinforcedHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
 
@@ -53,6 +56,9 @@ public class Registration {
             () -> new me.Wikos.hoppersadditions.Block.Hoppers.BatchHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER), 8));
 
     // --- ITEMS ---
+    public static final RegistrySupplier<Item> OVERFLOW_HOPPER_ITEM = ITEMS.register("overflow_hopper",
+            () -> new BlockItem(OVERFLOW_HOPPER.get(), new Item.Properties()));
+
 
     public static final RegistrySupplier<Item> REINFORCED_HOPPER_ITEM = ITEMS.register("reinforced_hopper",
             () -> new BlockItem(REINFORCED_HOPPER.get(), new Item.Properties()));
@@ -82,6 +88,10 @@ public class Registration {
             () -> new BlockItem(SMALL_BATCH_HOPPER.get(), new Item.Properties()));
 
     // --- BLOCKS_ENTITY ---
+    public static final RegistrySupplier<BlockEntityType<OverflowHopperBlockEntity>> OVERFLOW_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("overflow_hopper", () ->
+                    BlockEntityType.Builder.of(OverflowHopperBlockEntity::new, OVERFLOW_HOPPER.get()).build(null));
+
 
     public static final RegistrySupplier<BlockEntityType<ReinforcedHopperBlockEntity>> REINFORCED_HOPPER_ENTITY =
             BLOCK_ENTITIES.register("reinforced_hopper", () ->
@@ -118,6 +128,26 @@ public class Registration {
                         return new me.Wikos.hoppersadditions.BlockEntity.Hoppers.BatchHopperBlockEntity(pos, state, amount);
                     }, BATCH_HOPPER.get(), SMALL_BATCH_HOPPER.get()).build(null));
 
+    public static final RegistrySupplier<Block> SPLITTING_HOPPER = BLOCKS.register("splitting_hopper",
+            () -> new SplittingHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
+
+    public static final RegistrySupplier<Item> SPLITTING_HOPPER_ITEM = ITEMS.register("splitting_hopper",
+            () -> new BlockItem(SPLITTING_HOPPER.get(), new Item.Properties()));
+
+    public static final RegistrySupplier<BlockEntityType<SplittingHopperBlockEntity>> SPLITTING_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("splitting_hopper", () ->
+                    BlockEntityType.Builder.of(SplittingHopperBlockEntity::new, SPLITTING_HOPPER.get()).build(null));
+
+    public static final RegistrySupplier<Block> PULSE_HOPPER = BLOCKS.register("pulse_hopper",
+            () -> new PulseHopperBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.HOPPER)));
+
+    public static final RegistrySupplier<Item> PULSE_HOPPER_ITEM = ITEMS.register("pulse_hopper",
+            () -> new BlockItem(PULSE_HOPPER.get(), new Item.Properties()));
+
+    public static final RegistrySupplier<BlockEntityType<PulseHopperBlockEntity>> PULSE_HOPPER_ENTITY =
+            BLOCK_ENTITIES.register("pulse_hopper", () ->
+                    BlockEntityType.Builder.of(PulseHopperBlockEntity::new, PULSE_HOPPER.get()).build(null));
+
     // --- TABS ---
 
     public static final RegistrySupplier<CreativeModeTab> HOPPER_TAB = TABS.register("hoppers_tab", () ->
@@ -125,6 +155,7 @@ public class Registration {
                     .title(Component.translatable("itemGroup." + MOD_ID + ".hoppers_tab"))
                     .icon(() -> new ItemStack(REINFORCED_HOPPER.get()))
                     .displayItems((parameters, output) -> {
+                        output.accept(OVERFLOW_HOPPER_ITEM.get());
                         output.accept(REINFORCED_HOPPER_ITEM.get());
                         output.accept(PICKAXE_HOPPER_ITEM.get());
                         output.accept(DROPPING_HOPPER_ITEM.get());
@@ -134,6 +165,8 @@ public class Registration {
                         output.accept(ANIMAL_HOPPER_ITEM.get());
                         output.accept(BATCH_HOPPER_ITEM.get());
                         output.accept(SMALL_BATCH_HOPPER_ITEM.get());
+                        output.accept(PULSE_HOPPER_ITEM.get());
+                        output.accept(SPLITTING_HOPPER_ITEM.get());
                     })
                     .build()
     );

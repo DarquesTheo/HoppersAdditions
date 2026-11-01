@@ -1,0 +1,24 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "hoppersadditions:block/overflow_hopper_side",
+      "y": 0
+    },
+    "facing=east": {
+      "model": "hoppersadditions:block/overflow_hopper_side",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hoppersadditions:block/overflow_hopper_side",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hoppersadditions:block/overflow_hopper_side",
+      "y": 270
+    },
+    "facing=down": {
+      "model": "hoppersadditions:block/overflow_hopper_side",
+      "y": 0
+    }
+  }
+}

@@ -1,5 +1,7 @@
 {
   "values": [
+    "hoppersadditions:pulse_hopper",
+    "hoppersadditions:overflow_hopper",
     "hoppersadditions:reinforced_hopper",
     "hoppersadditions:pickaxe_hopper",
     "hoppersadditions:dropping_hopper",
@@ -8,6 +10,7 @@
     "hoppersadditions:monster_hopper",
     "hoppersadditions:animal_hopper",
     "hoppersadditions:batch_hopper",
-    "hoppersadditions:small_batch_hopper"
+    "hoppersadditions:small_batch_hopper",
+    "hoppersadditions:splitting_hopper"
   ]
 }
