@@ -14,3 +14,8 @@ dependencies {
 
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 }
+
+processResources {
+    from(rootProject.file("LICENSE"))
+    from(rootProject.file("LICENSE.txt"))
+}

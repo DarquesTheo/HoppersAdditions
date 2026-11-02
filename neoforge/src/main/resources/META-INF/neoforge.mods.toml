@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[2,)"
 issueTrackerURL = "https://github.com/DarquesTheo/HoppersAdditions/issues"
-license = "All Rights Reserved"
+license = "GPL-3.0-only"
 
 [[mods]]
 modId = "hoppersadditions"

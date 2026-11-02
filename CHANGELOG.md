@@ -2,8 +2,8 @@
 
 ## 0.3 - Unreleased
 
-Not published or approved for release. The maintainer reports manual checks passed
-on November 2, 2026; the licensing decision remains a release gate. See
+Not published. The maintainer reports manual checks passed on November 2, 2026.
+GPLv3 licensing was confirmed on November 3, 2026. See
 `docs/v0.3-release-preparation.md` for evidence and the maintainer handoff.
 
 ### New hoppers
@@ -65,8 +65,8 @@ Each recipe is shapeless and produces one hopper:
   every allowed version combination has been tested.
 - Removed the stale optional Fabric mod-list icon declaration. No gameplay
   textures, models, recipes, or hopper behavior changed in this metadata cleanup.
-- Licensing is unresolved: `LICENSE` contains GPL v3 text, while `LICENSE.txt`
-  and loader descriptors declare all rights reserved. These notes do not grant
-  rights or select a license. Maintainer direction is required before release.
+- Aligned the project notice and both loader descriptors with GPL version 3
+  only (`GPL-3.0-only`), as selected by the maintainer. Both distributables
+  include the complete license and project notice.
 - Snapshot build plugins remain in use; dependency resolution is not fully
   immutable. No release date or successful publication is claimed.

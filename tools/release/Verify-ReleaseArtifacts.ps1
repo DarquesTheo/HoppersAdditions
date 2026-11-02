@@ -100,6 +100,10 @@ try {
         $json = @{}
         try {
             $names = @($archive.Entries.FullName)
+            foreach ($licensePath in @('LICENSE', 'LICENSE.txt')) {
+                $sourceLicense = [IO.File]::ReadAllText((Join-Path $repository $licensePath))
+                Assert-Release ((Read-Entry $archive $licensePath) -ceq $sourceLicense) "Missing or mismatched packaged license: $licensePath"
+            }
             Assert-Release (@($names | Group-Object | Where-Object Count -gt 1).Count -eq 0) "Duplicate ZIP entries: $path"
             $unexpected = @($names | Where-Object { $_ -match '(^|/)(logs?|tools|\.git|\.idea|\.env)(/|$)|\.(log|log\.gz|java|ps1|key|pem)$' })
             Assert-Release ($unexpected.Count -eq 0) "Unexpected development/private content: $unexpected"
@@ -149,6 +153,7 @@ try {
             }
             if ($loader -eq 'fabric') {
                 $metadata = $json['fabric.mod.json']
+                Assert-Release ($metadata.license -eq 'GPL-3.0-only') 'Wrong Fabric license.'
                 Assert-Release ($metadata.id -eq 'hoppersadditions' -and $metadata.version -eq '0.3') 'Wrong Fabric ID/version.'
                 $expected = @{ minecraft = '>=1.21.1 <1.21.2'; fabricloader = '>=0.18.4'; java = '>=21'; architectury = '>=13.0.8'; 'fabric-api' = '*' }
                 foreach ($key in $expected.Keys) { Assert-Release ($metadata.depends.$key -eq $expected[$key]) "Wrong Fabric dependency: $key" }
@@ -159,6 +164,7 @@ try {
                 $descriptor = Read-Entry $archive 'fabric.mod.json'
             } else {
                 $descriptor = Read-Entry $archive 'META-INF/neoforge.mods.toml'
+                Assert-Release ($descriptor -match '(?m)^license\s*=\s*"GPL-3\.0-only"\s*$') 'Wrong NeoForge license.'
                 Assert-Release ($descriptor -match '(?m)^version\s*=\s*"0\.3"\s*$' -and $descriptor -match '(?m)^modId\s*=\s*"hoppersadditions"\s*$') 'Wrong NeoForge version/ID.'
                 $expected = @{ neoforge = '[21.1.220,21.2)'; minecraft = '[1.21.1,1.21.2)'; architectury = '[13.0.8,)' }
                 $blocks = [regex]::Matches($descriptor, '(?s)\[\[dependencies\.hoppersadditions\]\](.*?)(?=\[\[|\z)')
