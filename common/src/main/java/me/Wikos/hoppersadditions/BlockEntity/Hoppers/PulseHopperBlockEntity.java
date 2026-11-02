@@ -133,7 +133,7 @@ public class PulseHopperBlockEntity extends RandomizableContainerBlockEntity imp
         if (!this.tryLoadLootTable(tag)) {
             ContainerHelper.loadAllItems(tag, this.items, provider);
         }
-        this.powerInitialized = tag.getBoolean("PulsePowerInitialized") && tag.contains("PulseLastPowered");
+        this.powerInitialized = false;
         this.lastPowered = tag.getBoolean("PulseLastPowered");
         this.lastPulseGameTime = tag.contains("PulseLastGameTime") ? tag.getLong("PulseLastGameTime") : Long.MIN_VALUE;
         this.nextInputGameTime = tag.contains("PulseNextInputGameTime") ? tag.getLong("PulseNextInputGameTime") : Long.MIN_VALUE;

@@ -1,0 +1,23 @@
+allprojects {
+    afterEvaluate { project ->
+        if (project.path == ":common") {
+            def regressionClasses = project.layout.buildDirectory.dir("pulse-regression/classes")
+            def compileRegression = project.tasks.register("compilePulseRegression", JavaCompile) {
+                dependsOn project.tasks.named("classes")
+                source rootProject.file("tools/pulse/PulseReloadRegression.java")
+                classpath = project.sourceSets.main.runtimeClasspath
+                destinationDirectory = regressionClasses
+                options.release = 21
+            }
+            project.tasks.register("pulseRegression", JavaExec) {
+                dependsOn compileRegression
+                classpath = project.files(regressionClasses) + project.sourceSets.main.runtimeClasspath
+                mainClass = "PulseReloadRegression"
+                workingDir = project.layout.buildDirectory.get().asFile
+                if (project.hasProperty("pulseExpectHistoricalFailure")) {
+                    args "--expect-historical-failure"
+                }
+            }
+        }
+    }
+}

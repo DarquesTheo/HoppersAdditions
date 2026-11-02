@@ -1,29 +1,27 @@
 modLoader = "javafml"
 loaderVersion = "[2,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/DarquesTheo/HoppersAdditions/issues"
 license = "All Rights Reserved"
 
 [[mods]]
 modId = "hoppersadditions"
 version = "${version}"
 displayName = "Hoppers Additions"
+displayURL = "https://github.com/DarquesTheo/HoppersAdditions"
 authors = "Wikos"
-description = '''
-
-'''
-#logoFile = ""
+description = '''Adds specialized hoppers, including Splitting, Overflow, and Pulse Hoppers, for item automation.'''
 
 [[dependencies.hoppersadditions]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21,)"
+versionRange = "[21.1.220,21.2)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.hoppersadditions]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.1,)"
+versionRange = "[1.21.1,1.21.2)"
 ordering = "NONE"
 side = "BOTH"
 

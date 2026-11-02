@@ -3,15 +3,16 @@
   "id": "hoppersadditions",
   "version": "${version}",
   "name": "Hoppers Additions",
-  "description": "",
+  "description": "Adds specialized hoppers, including Splitting, Overflow, and Pulse Hoppers, for item automation.",
   "authors": [
     "Wikos"
   ],
   "contact": {
-    "homepage": ""
+    "homepage": "https://github.com/DarquesTheo/HoppersAdditions",
+    "sources": "https://github.com/DarquesTheo/HoppersAdditions",
+    "issues": "https://github.com/DarquesTheo/HoppersAdditions/issues"
   },
   "license": "All-Rights-Reserved",
-  "icon": "assets/hoppersadditions/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -26,12 +27,9 @@
   ],
   "depends": {
     "fabricloader": ">=0.18.4",
-    "minecraft": "~1.21.1",
+    "minecraft": ">=1.21.1 <1.21.2",
     "java": ">=21",
     "architectury": ">=13.0.8",
     "fabric-api": "*"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
