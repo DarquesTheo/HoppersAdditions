@@ -1,7 +1,6 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,7 @@ public class BatchHopperBlockEntity extends ModdedHopperBlockEntity {
     private final int batchAmount;
 
     public BatchHopperBlockEntity(BlockPos pos, BlockState state, int batchAmount) {
-        super(Registration.BATCH_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
+        super(me.Wikos.hoppersadditions.Registration.BATCH_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
         this.batchAmount = batchAmount;
     }
 
@@ -37,7 +36,7 @@ public class BatchHopperBlockEntity extends ModdedHopperBlockEntity {
     }
 
     private static void tryMoveItemsLocal(Level level, BlockPos blockPos, BlockState blockState, BatchHopperBlockEntity batchEntity, BooleanSupplier booleanSupplier) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (!batchEntity.isOnCooldown() && blockState.getValue(HopperBlock.ENABLED)) {
                 boolean bl = false;
                 if (!batchEntity.isEmpty()) {

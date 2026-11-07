@@ -1,23 +1,26 @@
 # Hoppers Additions
 
-A Minecraft 1.21.1 hopper mod with shared Architectury code and Fabric and NeoForge builds.
+A Minecraft 1.21.11 hopper mod with shared Architectury code and Fabric and NeoForge builds.
 
 ## Compatibility
 
-- Includes Splitting, Overflow, and Pulse Hoppers alongside the existing specialized hoppers.
-- Both loader descriptors restrict Minecraft to `>=1.21.1 <1.21.2`; Minecraft 1.21.2 and later are not advertised as supported.
-- NeoForge is restricted to `>=21.1.220 <21.2`. The minimum matches the pinned build dependency, the reviewed build baseline; earlier 21.1 versions have not been validated. This range is not proof that every later 21.1 patch has been tested in gameplay.
-- Fabric requires Loader >=0.18.4, Architectury API >=13.0.8, and Fabric API. The build pins Fabric API 0.116.9+1.21.1.
-- NeoForge also requires Architectury API >=13.0.8.
+- Preserves all twelve variants: Reinforced, Pickaxe, Dropping, Magnetic, Filter, Monster, Animal, Batch, Small Batch, Splitting, Overflow, and Pulse. No new hoppers are added by this port.
+- Minecraft **1.21.11 only**, Java **21**. Other game versions are not advertised.
+- Fabric: Loader **0.20.1+**, Fabric API **0.141.6+1.21.11 or newer for 1.21.11**, Architectury API **19.0.1** (19.x).
+- NeoForge: **21.11.48+ within 21.11**, Architectury API **19.0.1** (19.x).
+- Install the matching loader's normal JAR and its separate dependencies; never install both loader JARs together.
+- **1.21.11 is the active development target; 1.21.1 releases are legacy.** Parallel feature backports are out of scope.
+- Back up 1.21.1 worlds and test disposable copies before upgrading. Preserve the original backup outside the test instance. Downgrade safety is not promised.
+- See [migration evidence and release blockers](docs/1.21.11-migration.md). Build/harness success is not release readiness or proof of gameplay/save compatibility.
 - Repository: https://github.com/DarquesTheo/HoppersAdditions; issue tracker: https://github.com/DarquesTheo/HoppersAdditions/issues.
 
 ## Build prerequisites
 
-- Use a full JDK, not only a Java runtime. The project targets Java 21 bytecode. JDK 21 is the baseline; the existing project also builds with Corretto JDK 23.0.2.
-- Select a build JVM compatible with pinned Gradle 8.12.1. Use JDK 21 or the documented JDK 23 setup rather than an unvalidated newer JDK.
+- Use a full **JDK 21**, not only a runtime. Validation uses Amazon Corretto **21.0.13+11-LTS** (21.0.13.0.11); all mod bytecode targets Java 21.
+- The checked-in wrapper selects **Gradle 9.2.1**. Do not inherit the machine's default JDK or apply Minecraft 26.x prerequisites.
 - Internet access is needed on the first build for Gradle, Minecraft, and mod dependencies.
 
-The included Gradle wrapper avoids needing a separate Gradle installation. The distribution checksum is pinned in `gradle/wrapper/gradle-wrapper.properties`. Existing snapshot plugin declarations remain unchanged, so dependency resolution is not fully immutable.
+The included Gradle wrapper avoids needing a separate Gradle installation. The distribution checksum is pinned in `gradle/wrapper/gradle-wrapper.properties`. Build plugins are pinned: Architectury Loom 1.14.476, Architectury plugin 3.4.164, and Shadow 9.3.0. Loom labels its 1.14 line beta; no snapshot coordinates are selected. Exact pins and official references are in the migration notes.
 
 ## Windows / PowerShell
 
@@ -57,7 +60,29 @@ The Unix launcher is included, but this setup has only been validated on Windows
 - NeoForge distributable: `neoforge/build/libs/hoppers-additions-neoforge-<version>.jar`.
 - Use the normal remapped JAR for the matching loader, not a `dev`, `dev-shadow`, or `sources` JAR.
 - Ordinary Gradle test tasks have no test sources. Run the opt-in Pulse regression with `./gradlew.bat -I tools/pulse-regression.gradle :common:pulseRegression --console=plain`. It is an isolated harness, not live gameplay.
+- Release version: `0.4.0+mc1.21.11`; the game target is explicit in both distributable names.
 - Verify the normal remapped JARs with `./tools/release/Verify-ReleaseArtifacts.ps1`. Build/package success alone does not prove farm behavior or item conservation.
+
+## Automated world tests
+
+See [GameTest coverage, commands and limitations](docs/gametest.md). Compile the
+test-only sources with the documented JDK 21 and wrapper:
+
+```powershell
+./gradlew.bat :fabric:gametestClasses :neoforge:gametestClasses --console=plain
+```
+
+After reading the Minecraft EULA and explicitly authorizing disposable test
+servers, run both loaders with one command:
+
+```powershell
+./tools/gametest/Run-GameTests.ps1 -EulaAccepted -ValidateGuards
+```
+
+This command fails on required failures, missing/zero project tests and skipped
+tests. It does not establish rendering/UI correctness, genuine world reloads,
+historical-world upgrades, or release readiness. CI requires explicit maintainer
+EULA authorization; it does not silently accept it or skip required world tests.
 
 ## Contributing
 

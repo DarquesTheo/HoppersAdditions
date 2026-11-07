@@ -1,7 +1,6 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -22,7 +21,7 @@ public class OverflowHopperBlockEntity extends ModdedHopperBlockEntity {
     public static final int MOVE_ITEM_SPEED = 8;
 
     public OverflowHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.OVERFLOW_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
+        super(me.Wikos.hoppersadditions.Registration.OVERFLOW_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, OverflowHopperBlockEntity hopper) {
@@ -42,7 +41,7 @@ public class OverflowHopperBlockEntity extends ModdedHopperBlockEntity {
     }
 
     private void transfer(Level level, BlockPos pos, BlockState state, BooleanSupplier collect) {
-        if (level.isClientSide || this.isOnCooldown() || !state.getValue(HopperBlock.ENABLED)) {
+        if (level.isClientSide() || this.isOnCooldown() || !state.getValue(HopperBlock.ENABLED)) {
             return;
         }
         boolean moved = this.pushOneItem(level, pos, state);

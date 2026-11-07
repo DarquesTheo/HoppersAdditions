@@ -70,30 +70,30 @@ public class SplittingHopperBlock extends ModdedHopperBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type,
+        return level.isClientSide() ? null : createTickerHelper(type,
                 Registration.SPLITTING_HOPPER_ENTITY.get(), SplittingHopperBlockEntity::serverTick);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide && level.getBlockEntity(pos) instanceof SplittingHopperBlockEntity hopper) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof SplittingHopperBlockEntity hopper) {
             player.openMenu(hopper);
             player.awardStat(Stats.INSPECT_HOPPER);
         }
-        return level.isClientSide ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
+        return level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.CONSUME;
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, net.minecraft.world.entity.InsideBlockEffectApplier effects, boolean applyEffects) {
         if (level.getBlockEntity(pos) instanceof SplittingHopperBlockEntity hopper) {
             hopper.collectEntity(level, state, entity);
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("tooltip.hoppersadditions.splitting_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, tooltip, flag);
+
     }
 }

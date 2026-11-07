@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
-public class ModdedHopperBlock extends HopperBlock  {
+public class ModdedHopperBlock extends HopperBlock implements me.Wikos.hoppersadditions.Item.HopperTooltip {
     public ModdedHopperBlock(Properties properties) {
         super(properties);
 
@@ -23,7 +23,7 @@ public class ModdedHopperBlock extends HopperBlock  {
     }
 
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         } else {
             BlockEntity blockEntity = level.getBlockEntity(pos);

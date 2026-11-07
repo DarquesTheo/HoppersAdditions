@@ -6,12 +6,8 @@
     " I "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "C": {
-      "item": "minecraft:barrel"
-    }
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:barrel"
   },
   "result": {
     "id": "hoppersadditions:batch_hopper",

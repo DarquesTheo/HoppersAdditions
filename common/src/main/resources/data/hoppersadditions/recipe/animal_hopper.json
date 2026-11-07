@@ -6,12 +6,8 @@
     " I "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "C": {
-      "item": "minecraft:leather"
-    }
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:leather"
   },
   "result": {
     "id": "hoppersadditions:animal_hopper",

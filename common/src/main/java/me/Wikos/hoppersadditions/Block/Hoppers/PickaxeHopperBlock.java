@@ -51,10 +51,10 @@ public class PickaxeHopperBlock extends ModdedHopperBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.PICKAXE_HOPPER_ENTITY.get(), PickaxeHopperBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(type, Registration.PICKAXE_HOPPER_ENTITY.get(), PickaxeHopperBlockEntity::tick);
     }
 
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.pickaxe_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.pickaxe_hopper.description_two")
@@ -62,6 +62,6 @@ public class PickaxeHopperBlock extends ModdedHopperBlock {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 0.5x"))
                 .withStyle(ChatFormatting.GOLD));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHopperTooltip(stack, context, tooltipComponents, tooltipFlag);
     }
 }

@@ -6,12 +6,8 @@
     " I "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "O": {
-      "item": "minecraft:dropper"
-    }
+    "I": "minecraft:iron_ingot",
+    "O": "minecraft:dropper"
   },
   "result": {
     "id": "hoppersadditions:dropping_hopper",

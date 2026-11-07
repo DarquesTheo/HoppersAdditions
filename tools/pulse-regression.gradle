@@ -5,12 +5,19 @@ allprojects {
             def compileRegression = project.tasks.register("compilePulseRegression", JavaCompile) {
                 dependsOn project.tasks.named("classes")
                 source rootProject.file("tools/pulse/PulseReloadRegression.java")
+                source rootProject.file("tools/pulse/HopperMigrationRegression.java")
                 classpath = project.sourceSets.main.runtimeClasspath
                 destinationDirectory = regressionClasses
                 options.release = 21
             }
-            project.tasks.register("pulseRegression", JavaExec) {
+            def migrationRegression = project.tasks.register("hopperMigrationRegression", JavaExec) {
                 dependsOn compileRegression
+                classpath = project.files(regressionClasses) + project.sourceSets.main.runtimeClasspath
+                mainClass = "HopperMigrationRegression"
+                workingDir = project.layout.buildDirectory.get().asFile
+            }
+            project.tasks.register("pulseRegression", JavaExec) {
+                dependsOn compileRegression, migrationRegression
                 classpath = project.files(regressionClasses) + project.sourceSets.main.runtimeClasspath
                 mainClass = "PulseReloadRegression"
                 workingDir = project.layout.buildDirectory.get().asFile

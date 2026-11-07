@@ -1,7 +1,6 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -12,7 +11,7 @@ public class ReinforcedHopperBlockEntity extends ModdedHopperBlockEntity {
     public static final int MOVE_ITEM_SPEED = 4;
 
     public ReinforcedHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.REINFORCED_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
+        super(me.Wikos.hoppersadditions.Registration.REINFORCED_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ReinforcedHopperBlockEntity blockEntity) {

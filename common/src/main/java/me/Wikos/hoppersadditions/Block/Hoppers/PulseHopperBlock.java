@@ -25,7 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 
-public class PulseHopperBlock extends HopperBlock {
+public class PulseHopperBlock extends HopperBlock implements me.Wikos.hoppersadditions.Item.HopperTooltip {
     public PulseHopperBlock(Properties properties) {
         super(properties);
     }
@@ -43,7 +43,7 @@ public class PulseHopperBlock extends HopperBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.PULSE_HOPPER_ENTITY.get(), PulseHopperBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(type, Registration.PULSE_HOPPER_ENTITY.get(), PulseHopperBlockEntity::tick);
     }
 
     @Override
@@ -54,12 +54,12 @@ public class PulseHopperBlock extends HopperBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, BlockPos neighborPos, boolean movedByPiston) {
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighbor, net.minecraft.world.level.redstone.Orientation orientation, boolean movedByPiston) {
         updatePower(level, pos, false);
     }
 
     private void updatePower(Level level, BlockPos pos, boolean initialize) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
         boolean powered = level.hasNeighborSignal(pos);
@@ -77,8 +77,8 @@ public class PulseHopperBlock extends HopperBlock {
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (!level.isClientSide && entity instanceof ItemEntity itemEntity
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, net.minecraft.world.entity.InsideBlockEffectApplier effects, boolean applyEffects) {
+        if (!level.isClientSide() && entity instanceof ItemEntity itemEntity
                 && level.getBlockEntity(pos) instanceof PulseHopperBlockEntity hopper
                 && entity.getBoundingBox().move(-pos.getX(), -pos.getY(), -pos.getZ()).intersects(hopper.getSuckAabb())) {
             hopper.collectItem(itemEntity);
@@ -87,7 +87,7 @@ public class PulseHopperBlock extends HopperBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
         if (level.getBlockEntity(pos) instanceof PulseHopperBlockEntity hopper) {
@@ -98,10 +98,10 @@ public class PulseHopperBlock extends HopperBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("tooltip.hoppersadditions.pulse_hopper.description").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltip.hoppersadditions.pulse_hopper.input").withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("tooltip.hoppersadditions.pulse_hopper.failed").withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, tooltip, flag);
+
     }
 }

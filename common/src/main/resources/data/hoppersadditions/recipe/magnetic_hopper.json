@@ -6,12 +6,8 @@
     " I "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "O": {
-      "item": "minecraft:lodestone"
-    }
+    "I": "minecraft:iron_ingot",
+    "O": "minecraft:lodestone"
   },
   "result": {
     "id": "hoppersadditions:magnetic_hopper",

@@ -14,21 +14,21 @@ description = '''Adds specialized hoppers, including Splitting, Overflow, and Pu
 [[dependencies.hoppersadditions]]
 modId = "neoforge"
 type = "required"
-versionRange = "[21.1.220,21.2)"
+versionRange = "[21.11.48,21.12)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.hoppersadditions]]
 modId = "minecraft"
 type = "required"
-versionRange = "[1.21.1,1.21.2)"
+versionRange = "[1.21.11]"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.hoppersadditions]]
 modId = "architectury"
 type = "required"
-versionRange = "[13.0.8,)"
+versionRange = "[19.0.1,20)"
 ordering = "AFTER"
 side = "BOTH"
 

@@ -26,3 +26,24 @@ Finish with the branch/commit, changed files, validation results, PR if authoriz
 ```
 
 After feature work, use one integration pass to review PRs, reconcile shared-file edits, and merge approved work serially. Rebuild and validate the combined mod after integration; independent successful builds do not prove combined farm behavior. Close issues only when their acceptance criteria are met, and keep release blockers open separately.
+
+## GameTests (Minecraft 1.21.11)
+
+Read [the test guide](docs/gametest.md) before adding scenarios. Tests live in
+`tools/gametest/java` and loader-specific `src/gametest` source sets, never
+`src/main`. Add a scenario to both the Java registration map and
+`tools/gametest/scenarios.json`; the latter is the required discovery manifest.
+Use real blocks/entities, bounded game ticks, positive and negative assertions,
+and component-aware conservation. Do not fix gameplay or weaken expectations
+to hide failures; report a reproducer for separately authorized fixes.
+
+The existing migration PR #10 is the approved stack for issue #9, per the
+maintainer's explicit follow-up instruction. The test worktree remains isolated;
+its scoped commits are pushed to that PR's feature branch, not master. This
+exception does not authorize future stacking or changing other worktrees.
+
+Run `./tools/gametest/Run-GameTests.ps1 -EulaAccepted -ValidateGuards` only
+after the maintainer explicitly accepts the Minecraft EULA for these disposable
+servers. Omit `-EulaAccepted` otherwise: execution deliberately fails closed.
+Use PowerShell 7 (`pwsh`) on Linux/macOS; the Windows entry point also works
+with Windows PowerShell 5.1. No server EULA is accepted by ordinary builds.

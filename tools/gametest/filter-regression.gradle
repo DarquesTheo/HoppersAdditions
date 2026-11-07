@@ -1,0 +1,21 @@
+allprojects {
+    afterEvaluate { project ->
+        if (project.path == ':common') {
+            def regressionClasses = project.layout.buildDirectory.dir('pulse-regression/classes')
+            def output = project.layout.buildDirectory.dir('filter-regression/classes')
+            def compile = project.tasks.register('compileBlockedFilterRegression', JavaCompile) {
+                dependsOn project.tasks.named('compilePulseRegression')
+                source rootProject.file('tools/gametest/BlockedFilterRegression.java')
+                classpath = project.files(regressionClasses) + project.sourceSets.main.runtimeClasspath
+                destinationDirectory = output
+                options.release = 21
+            }
+            project.tasks.register('filterBlockedRegression', JavaExec) {
+                dependsOn compile
+                classpath = project.files(output, regressionClasses) + project.sourceSets.main.runtimeClasspath
+                mainClass = 'BlockedFilterRegression'
+                workingDir = project.layout.buildDirectory.get().asFile
+            }
+        }
+    }
+}

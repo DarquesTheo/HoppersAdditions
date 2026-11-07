@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class MobHopperBlock extends HopperBlock {
+public class MobHopperBlock extends HopperBlock implements me.Wikos.hoppersadditions.Item.HopperTooltip {
 
     private final boolean isMonsterVariant;
 
@@ -40,9 +40,9 @@ public class MobHopperBlock extends HopperBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         if (isMonsterVariant) {
-            return level.isClientSide ? null : createTickerHelper(type, Registration.MONSTER_HOPPER_ENTITY.get(), MobHopperBlockEntity::tick);
+            return level.isClientSide() ? null : createTickerHelper(type, Registration.MONSTER_HOPPER_ENTITY.get(), MobHopperBlockEntity::tick);
         } else {
-            return level.isClientSide ? null : createTickerHelper(type, Registration.ANIMAL_HOPPER_ENTITY.get(), MobHopperBlockEntity::tick);
+            return level.isClientSide() ? null : createTickerHelper(type, Registration.ANIMAL_HOPPER_ENTITY.get(), MobHopperBlockEntity::tick);
         }
     }
 
@@ -59,7 +59,7 @@ public class MobHopperBlock extends HopperBlock {
                 .setValue(ENABLED, Boolean.TRUE);
     }
 
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         String keyName = "animal_hopper";
         if (isMonsterVariant) {
             keyName = "monster_hopper";
@@ -69,6 +69,5 @@ public class MobHopperBlock extends HopperBlock {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 1x"))
                 .withStyle(ChatFormatting.GOLD));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 }

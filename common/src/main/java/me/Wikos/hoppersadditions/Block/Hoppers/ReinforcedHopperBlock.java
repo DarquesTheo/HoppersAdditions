@@ -34,15 +34,15 @@ public class ReinforcedHopperBlock extends ModdedHopperBlock {
 
     @Override
     public <T extends BlockEntity>BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.REINFORCED_HOPPER_ENTITY.get(), ReinforcedHopperBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(type, Registration.REINFORCED_HOPPER_ENTITY.get(), ReinforcedHopperBlockEntity::tick);
     }
 
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.reinforced_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 2x"))
                 .withStyle(ChatFormatting.GOLD));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHopperTooltip(stack, context, tooltipComponents, tooltipFlag);
     }
 }

@@ -1,0 +1,21 @@
+[
+  {"id":"reinforced_cooldown","coverage":"Reinforced: real vanilla baseline and faster output"},
+  {"id":"pickaxe_mining","coverage":"Pickaxe: stone drops, efficiency, fortune state, bedrock rejection"},
+  {"id":"pickaxe_fortune","coverage":"Pickaxe: deterministic test loot proves Fortune is supplied to the real mining tool"},
+  {"id":"dropping_components","coverage":"Dropping: item entities, components, no container insertion, conservation"},
+  {"id":"magnetic_range","coverage":"Magnetic: in-range and out-of-range entities"},
+  {"id":"filter_reference","coverage":"Filter: exact matching, rejection, prototype retention"},
+  {"id":"filter_blocked","coverage":"Filter: blocked sided destination must conserve items"},
+  {"id":"monster_categories","coverage":"Monster: categories, UUID conservation, redstone"},
+  {"id":"animal_categories","coverage":"Animal: categories, UUID conservation, redstone"},
+  {"id":"batch_threshold","coverage":"Batch: 64 threshold, capacity-limited partial transfer, conservation"},
+  {"id":"small_batch_threshold","coverage":"Small Batch: 8 threshold, capacity-limited partial transfer, conservation"},
+  {"id":"splitting_alternation","coverage":"Splitting: success alternation and blocked turn retention"},
+  {"id":"overflow_priority","coverage":"Overflow: front priority, same-candidate down fallback, both full"},
+  {"id":"pulse_edges","coverage":"Pulse: rising edge, held power, failed and empty pulses consumed"},
+  {"id":"pulse_collection","coverage":"Pulse: unpowered-only collection and persisted cooldown/baseline"},
+  {"id":"sided_components","coverage":"Sided furnace inventory, full slots, stack limits, components"},
+  {"id":"stack_components","coverage":"Distinct components must not merge; stack maximum and batch item maximum"},
+  {"id":"redstone_comparator","coverage":"Inventory hopper redstone gates and comparator output"},
+  {"id":"state_roundtrip","coverage":"Applicable block entity states serialized and restored in world"}
+]

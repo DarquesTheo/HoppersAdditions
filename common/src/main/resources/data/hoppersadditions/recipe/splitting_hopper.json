@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "redstone",
   "ingredients": [
-    { "item": "minecraft:hopper" },
-    { "item": "minecraft:iron_ingot" },
-    { "item": "minecraft:quartz" }
+    "minecraft:hopper",
+    "minecraft:iron_ingot",
+    "minecraft:quartz"
   ],
   "result": { "id": "hoppersadditions:splitting_hopper", "count": 1 }
 }

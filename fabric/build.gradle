@@ -1,5 +1,5 @@
 plugins {
-    id 'com.github.johnrengelman.shadow'
+    id 'com.gradleup.shadow'
 }
 
 architectury {
@@ -55,3 +55,5 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
 }
+
+apply from: rootProject.file('tools/gametest/loader.gradle')
