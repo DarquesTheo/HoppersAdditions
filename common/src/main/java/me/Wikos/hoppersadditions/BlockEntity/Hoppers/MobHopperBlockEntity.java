@@ -1,6 +1,5 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -22,12 +21,12 @@ public class MobHopperBlockEntity extends BlockEntity {
     private static final AABB SUCK_AREA = new AABB(0, 1, 0, 1, 2, 1);
 
     public MobHopperBlockEntity(BlockPos pos, BlockState state, boolean isMonsterVariant) {
-        super(isMonsterVariant ? Registration.MONSTER_HOPPER_ENTITY.get() : Registration.ANIMAL_HOPPER_ENTITY.get(), pos, state);
+        super(isMonsterVariant ? me.Wikos.hoppersadditions.Registration.MONSTER_HOPPER_ENTITY.get() : me.Wikos.hoppersadditions.Registration.ANIMAL_HOPPER_ENTITY.get(), pos, state);
         this.isMonsterVariant = isMonsterVariant;
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, MobHopperBlockEntity blockEntity) {
-        if (level.isClientSide) return;
+        if (level.isClientSide()) return;
 
         if (state.getValue(HopperBlock.ENABLED)) {
             blockEntity.moveMobs(level, pos, state);

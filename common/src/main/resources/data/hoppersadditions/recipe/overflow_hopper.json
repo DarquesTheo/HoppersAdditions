@@ -1,12 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
-    {
-      "item": "minecraft:hopper"
-    },
-    {
-      "item": "minecraft:comparator"
-    }
+    "minecraft:hopper",
+    "minecraft:comparator"
   ],
   "result": {
     "id": "hoppersadditions:overflow_hopper",

@@ -3,9 +3,9 @@ package me.Wikos.hoppersadditions.BlockEntity;
 import me.Wikos.hoppersadditions.BlockEntity.Hoppers.ReinforcedHopperBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Container;
@@ -56,20 +56,20 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
 
     //vanilla hopper code bellow (w small edit)
 
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
+    protected void loadAdditional(ValueInput compoundTag) {
+        super.loadAdditional(compoundTag);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (!this.tryLoadLootTable(compoundTag)) {
-            ContainerHelper.loadAllItems(compoundTag, this.items, provider);
+            ContainerHelper.loadAllItems(compoundTag, this.items);
         }
 
-        this.cooldownTime = compoundTag.getInt("TransferCooldown");
+        this.cooldownTime = compoundTag.getIntOr("TransferCooldown", 0);
     }
 
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
+    protected void saveAdditional(ValueOutput compoundTag) {
+        super.saveAdditional(compoundTag);
         if (!this.trySaveLootTable(compoundTag)) {
-            ContainerHelper.saveAllItems(compoundTag, this.items, provider);
+            ContainerHelper.saveAllItems(compoundTag, this.items);
         }
 
         compoundTag.putInt("TransferCooldown", this.cooldownTime);
@@ -107,7 +107,7 @@ public class ModdedHopperBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     private static void tryMoveItems(Level level, BlockPos blockPos, BlockState blockState, ModdedHopperBlockEntity hopperBlockEntity, BooleanSupplier booleanSupplier) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (!hopperBlockEntity.isOnCooldown() && blockState.getValue(HopperBlock.ENABLED)) {
                 boolean bl = false;
                 if (!hopperBlockEntity.isEmpty()) {

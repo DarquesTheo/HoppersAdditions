@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.4.0+mc1.21.11 - Unreleased
+
+Compatibility port for issue #8. Not tagged or published; startup, gameplay,
+representative saved-world upgrades and artifact evidence are separate release
+requirements. See [migration notes](docs/1.21.11-migration.md).
+
+- Target Minecraft 1.21.11 on Fabric and NeoForge through Architectury; preserve
+  all twelve existing hopper variants, IDs, recipes and transfer contracts.
+- Port block/item registration, value-based saved-state serialization, redstone
+  and entity callbacks, enchantability, tooltips, recipe ingredients and item
+  model definitions. Keep existing textures/models and custom save keys.
+- Pin Architectury API 19.0.1, Architectury plugin 3.4.164, Loom 1.14.476,
+  Fabric Loader 0.20.1, Fabric API 0.141.6+1.21.11, NeoForge 21.11.48,
+  Shadow 9.3.0, Gradle 9.2.1 and Java 21. No Minecraft 26.x requirements.
+- 1.21.11 is the active target; 1.21.1 remains legacy with no parallel feature
+  backports. Test backed-up disposable world copies; do not downgrade an
+  upgraded world or overwrite the only original world.
+
 ## 0.3 - Unreleased
 
 Not published. The maintainer reports manual checks passed on November 2, 2026.

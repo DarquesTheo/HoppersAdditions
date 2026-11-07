@@ -34,15 +34,15 @@ public class DroppingHopperBlock extends ModdedHopperBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.DROPPING_HOPPER_ENTITY.get(), DroppingHopperBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(type, Registration.DROPPING_HOPPER_ENTITY.get(), DroppingHopperBlockEntity::tick);
     }
 
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.dropping_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 1x"))
                 .withStyle(ChatFormatting.GOLD));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHopperTooltip(stack, context, tooltipComponents, tooltipFlag);
     }
 }

@@ -1,0 +1,114 @@
+{
+  "date": "2026-11-07",
+  "baseline": "56e58d947683afdef2e0960b8fb5548a0cc43898",
+  "branch": "feat/8-minecraft-1.21.11",
+  "scope": "Local tested working tree before commit; final documentation/evidence additions do not change packaged code. Raw evidence is in ignored local build directories, not hosted CI.",
+  "versions": {
+    "minecraft": "1.21.11",
+    "mod": "0.4.0+mc1.21.11",
+    "java": "Amazon Corretto 21.0.13+11-LTS (21.0.13.0.11), Windows x64",
+    "gradle": "9.2.1",
+    "architecturyApi": "19.0.1",
+    "architecturyPlugin": "3.4.164",
+    "architecturyLoom": "1.14.476 (labels itself beta)",
+    "fabricLoader": "0.20.1",
+    "fabricApi": "0.141.6+1.21.11",
+    "neoforge": "21.11.48",
+    "shadow": "9.3.0"
+  },
+  "artifacts": [
+    {
+      "loader": "fabric",
+      "path": "fabric/build/libs/hoppers-additions-fabric-0.4.0+mc1.21.11.jar",
+      "sha256": "51cb6a760f39d873024fddc07f0c499f2ae9ede9ce5921a6109c98ec7ac91456"
+    },
+    {
+      "loader": "neoforge",
+      "path": "neoforge/build/libs/hoppers-additions-neoforge-0.4.0+mc1.21.11.jar",
+      "sha256": "5c5d699c9c6b38154854fc52f9f13e415b7666744eae80a198868b1d274e8fca"
+    }
+  ],
+  "commands": [
+    {
+      "command": "./gradlew.bat clean :common:build :fabric:build :neoforge:build --console=plain",
+      "result": "PASS: BUILD SUCCESSFUL in 8s; 31 actionable tasks"
+    },
+    {
+      "command": "./gradlew.bat -I tools/pulse-regression.gradle :common:pulseRegression --console=plain",
+      "result": "PASS: 53 migration assertions and all 71 existing Pulse assertions; fake level, real containers, not gameplay/world upgrade"
+    },
+    {
+      "command": "./tools/release/Verify-ReleaseArtifacts.ps1",
+      "result": "PASS: both normal distributable JARs"
+    },
+    {
+      "command": "./tools/release/Test-ReleaseArtifacts.ps1",
+      "result": "PASS: 14 corrupt fixtures rejected; originals accepted"
+    },
+    {
+      "command": "./tools/release/Collect-CandidateEvidence.ps1",
+      "result": "PASS: includes above clean build, artifact check, regressions, JDK/wrapper/source hashes"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "sourceComparison": {
+    "recipeSemanticsPreserved": 13,
+    "registryEntriesPreserved": 35
+  },
+  "runtime": {
+    "fabricClient": "Welcome screen and later loaded singleplayer world assistant-observed; no hopper acceptance claimed. Offline Realms/user-properties errors present.",
+    "neoforgeClient": "Logs show resources, 1483 recipes, integrated-server launch, world save and normal shutdown; UI/gameplay not assistant-verified.",
+    "dedicatedServers": "Both mod discovery attempts stopped at EULA. eula=false left untouched; no Ready/Done. NeoForge additionally reports missing server thread at boundary.",
+    "worldUpgrade": "UNVERIFIED: no representative backed-up 1.21.1 world supplied",
+    "allHopperGameplay": "UNVERIFIED: maintainer will perform checklist after draft PR"
+  },
+  "logs": [
+    {
+      "path": "build/issue8-evidence/20261107-221827-2cda65ea/java.log",
+      "sha256": "f6bb2082f8b8ab2874b3fad020517eb13d96ab6fc2f8ae0a08f20f1d2c8ad884"
+    },
+    {
+      "path": "build/issue8-evidence/20261107-221827-2cda65ea/gradle.log",
+      "sha256": "49ff8c923b266274ac092132c977af9f68e8e3e513fd6ff9dc733bb7ea5ed9b5"
+    },
+    {
+      "path": "build/issue8-evidence/20261107-221827-2cda65ea/build.log",
+      "sha256": "7d9e003738d1f82d5cf50abcf7096bc1140b4d5010ad063e9ba99875ea1d3806"
+    },
+    {
+      "path": "build/issue8-evidence/20261107-221827-2cda65ea/regressions.log",
+      "sha256": "31c3fa455bebbf4000685144e20f9af70f1e35fb0e499f0bd0d88c74ca65a962"
+    },
+    {
+      "path": "build/issue8-evidence/20261107-221827-2cda65ea/artifacts.json",
+      "sha256": "31259a2ea06cfb62e879cc8f37efd57d849f037a7ed558043b058b4999f7c432"
+    },
+    {
+      "path": "build/issue8-evidence/20261107-221827-2cda65ea/candidate.json",
+      "sha256": "51c1dd3d5817bd05adc66b5af700c65e735c230ce5b6ab92209d11508165b924"
+    },
+    {
+      "path": "build/issue8-fixtures/9151635312ee43368d5d7e2fe5c6cec4/fixtures.json",
+      "sha256": "353aaa6770e2d183d75fdb9d0cc6e511049392c326dcb780f0506c83079ca6c8"
+    },
+    {
+      "path": "build/issue8/fabric-server-startup.log",
+      "sha256": "ac9d1a8f49af1c8f6da66bf4fbaba40391a9b422d51fbbb31bff691e510400d1"
+    },
+    {
+      "path": "build/issue8/neoforge-server-startup.log",
+      "sha256": "adcaf610197c1e9d53fbdb271b65b26292a1165329e998a8faa37f63449ac6e4"
+    },
+    {
+      "path": "build/issue8/client-fabric/stdout.log",
+      "sha256": "3e0487bf449159f59729f39521335e6cf7339d517ef9ec5ae522d190a7763cba"
+    },
+    {
+      "path": "build/issue8/client-neoforge/stdout.log",
+      "sha256": "13e262fa0646cd309102577821830fbadf654883c4524428d638432019cf4764"
+    }
+  ]
+}

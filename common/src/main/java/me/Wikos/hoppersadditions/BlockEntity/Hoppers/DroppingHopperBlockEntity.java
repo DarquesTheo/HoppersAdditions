@@ -1,7 +1,6 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -17,7 +16,7 @@ public class DroppingHopperBlockEntity extends ModdedHopperBlockEntity {
     public static final int MOVE_ITEM_SPEED = 8;
 
     public DroppingHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.DROPPING_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
+        super(me.Wikos.hoppersadditions.Registration.DROPPING_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, DroppingHopperBlockEntity blockEntity) {
@@ -30,7 +29,7 @@ public class DroppingHopperBlockEntity extends ModdedHopperBlockEntity {
     }
 
     private static void tryDropItems(Level level, BlockPos pos, BlockState state, DroppingHopperBlockEntity blockEntity, BooleanSupplier booleanSupplier) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide()) {
             if (!blockEntity.isOnCooldown() && state.getValue(HopperBlock.ENABLED)) {
                 boolean bl = false;
                 if (!blockEntity.isEmpty()) {

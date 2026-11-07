@@ -1,11 +1,10 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Container;
@@ -23,7 +22,7 @@ public class SplittingHopperBlockEntity extends ModdedHopperBlockEntity {
     private boolean nextDown;
 
     public SplittingHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.SPLITTING_HOPPER_ENTITY.get(), pos, state, TRANSFER_COOLDOWN);
+        super(me.Wikos.hoppersadditions.Registration.SPLITTING_HOPPER_ENTITY.get(), pos, state, TRANSFER_COOLDOWN);
     }
 
     @Override
@@ -32,14 +31,14 @@ public class SplittingHopperBlockEntity extends ModdedHopperBlockEntity {
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
-        nextDown = tag.getBoolean("NextDown");
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
+        nextDown = tag.getBooleanOr("NextDown", false);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("NextDown", nextDown);
     }
 
@@ -49,7 +48,7 @@ public class SplittingHopperBlockEntity extends ModdedHopperBlockEntity {
             --hopper.cooldownTime;
             hopper.setChanged();
         }
-        if (!level.isClientSide && !hopper.isOnCooldown() && state.getValue(HopperBlock.ENABLED)) {
+        if (!level.isClientSide() && !hopper.isOnCooldown() && state.getValue(HopperBlock.ENABLED)) {
             boolean moved = hopper.output(level, pos, state);
             moved |= hopper.suckInItems(level);
             if (moved) {
@@ -181,7 +180,7 @@ public class SplittingHopperBlockEntity extends ModdedHopperBlockEntity {
     }
 
     public void collectEntity(Level level, BlockState state, Entity entity) {
-        if (!level.isClientSide && !isOnCooldown() && state.getValue(HopperBlock.ENABLED)
+        if (!level.isClientSide() && !isOnCooldown() && state.getValue(HopperBlock.ENABLED)
                 && entity instanceof ItemEntity item
                 && entity.getBoundingBox().move(-worldPosition.getX(), -worldPosition.getY(), -worldPosition.getZ())
                 .intersects(getSuckAabb()) && collectItem(item)) {

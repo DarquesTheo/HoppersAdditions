@@ -3,7 +3,7 @@ param([string]$ArtifactRoot, [string]$OutputPath)
 $ErrorActionPreference = 'Stop'
 $repository = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 if (!$ArtifactRoot) { $ArtifactRoot = $repository }
-if (!$OutputPath) { $OutputPath = Join-Path $repository 'build/issue7-evidence/artifacts.json' }
+if (!$OutputPath) { $OutputPath = Join-Path $repository 'build/issue8-evidence/artifacts.json' }
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 function Assert-Release {
@@ -85,13 +85,13 @@ function Test-Model {
 Push-Location $repository
 try {
     $properties = ConvertFrom-StringData (Get-Content gradle.properties -Raw)
-    Assert-Release ($properties.mod_version -eq '0.3') 'This release gate expects version 0.3.'
+    Assert-Release ($properties.mod_version -eq '0.4.0+mc1.21.11' -and $properties.minecraft_version -eq '1.21.11') 'This release gate expects 0.4.0+mc1.21.11 on Minecraft 1.21.11.'
     $sourceRoot = (Resolve-Path common/src/main/resources).Path
     $sourceResources = @(Get-ChildItem "$sourceRoot/assets", "$sourceRoot/data" -Recurse -File)
     $sourceClasses = @(Get-ChildItem common/src/main/java -Recurse -Filter '*.java' -File)
     $javaRoot = (Resolve-Path common/src/main/java).Path
     $artifacts = foreach ($loader in @('fabric', 'neoforge')) {
-        $relativePath = "$loader/build/libs/hoppers-additions-$loader-0.3.jar"
+        $relativePath = "$loader/build/libs/hoppers-additions-$loader-$($properties.mod_version).jar"
         $path = Join-Path $ArtifactRoot $relativePath
         $archive = [IO.Compression.ZipFile]::OpenRead($path)
         $inspection = 'PASS'
@@ -146,27 +146,49 @@ try {
                 }
                 $recipe = $json["data/hoppersadditions/recipe/$id.json"]
                 Assert-Release ($recipe.type -eq 'minecraft:crafting_shapeless' -and $recipe.result.id -eq "hoppersadditions:$id" -and $recipe.result.count -eq 1) "Wrong recipe result/type: $id"
-                $actualIngredients = @($recipe.ingredients | ForEach-Object { $_.item } | Sort-Object)
+                $actualIngredients = @($recipe.ingredients | Sort-Object)
                 Assert-Release (($actualIngredients -join ',') -eq (@($ingredients[$feature] | Sort-Object) -join ',')) "Wrong crafting ingredients: $id"
                 $loot = $json["data/hoppersadditions/loot_table/blocks/$id.json"]
                 Assert-Release ($loot.type -eq 'minecraft:block' -and "hoppersadditions:$id" -in @($loot.pools.entries.name)) "Missing block loot: $id"
             }
+            foreach ($variant in @('reinforced', 'pickaxe', 'dropping', 'magnetic', 'filter', 'monster', 'animal', 'batch', 'small_batch', 'splitting', 'overflow', 'pulse')) {
+                $id = "$($variant)_hopper"
+                foreach ($entryPath in @("assets/hoppersadditions/blockstates/$id.json", "assets/hoppersadditions/models/item/$id.json", "assets/hoppersadditions/items/$id.json", "data/hoppersadditions/loot_table/blocks/$id.json")) {
+                    Assert-Release ($json.ContainsKey($entryPath)) "Missing hopper JSON: $entryPath"
+                }
+                $definition = $json["assets/hoppersadditions/items/$id.json"]
+                Assert-Release ($definition.model.type -eq 'minecraft:model' -and $definition.model.model -eq "hoppersadditions:item/$id") "Wrong item definition: $id"
+                Assert-Release (![string]::IsNullOrWhiteSpace($language."block.hoppersadditions.$id")) "Missing hopper translation: $id"
+            }
+            foreach ($recipePath in @($json.Keys | Where-Object { $_ -like 'data/hoppersadditions/recipe/*' })) {
+                $recipe = $json[$recipePath]
+                $recipeIngredients = if ($recipe.key) { @($recipe.key.PSObject.Properties.Value) } else { @($recipe.ingredients) }
+                Assert-Release ($recipeIngredients.Count -gt 0) "Missing ingredients: $recipePath"
+                foreach ($ingredient in $recipeIngredients) {
+                    Assert-Release ($ingredient -is [string] -and $ingredient -match '^#?[a-z0-9_.-]+:[a-z0-9_./-]+$') "Expected 1.21.11 ingredient string: $recipePath"
+                }
+            }
             if ($loader -eq 'fabric') {
                 $metadata = $json['fabric.mod.json']
                 Assert-Release ($metadata.license -eq 'GPL-3.0-only') 'Wrong Fabric license.'
-                Assert-Release ($metadata.id -eq 'hoppersadditions' -and $metadata.version -eq '0.3') 'Wrong Fabric ID/version.'
-                $expected = @{ minecraft = '>=1.21.1 <1.21.2'; fabricloader = '>=0.18.4'; java = '>=21'; architectury = '>=13.0.8'; 'fabric-api' = '*' }
+                Assert-Release ($metadata.id -eq 'hoppersadditions' -and $metadata.version -eq $properties.mod_version) 'Wrong Fabric ID/version.'
+                $expected = @{ minecraft = '=1.21.11'; fabricloader = '>=0.20.1'; java = '>=21'; architectury = '>=19.0.1 <20.0.0'; 'fabric-api' = '>=0.141.6+1.21.11' }
                 foreach ($key in $expected.Keys) { Assert-Release ($metadata.depends.$key -eq $expected[$key]) "Wrong Fabric dependency: $key" }
                 Assert-Release (![string]::IsNullOrWhiteSpace($metadata.description) -and !$metadata.suggests) 'Empty Fabric description or placeholder suggestions.'
                 foreach ($className in @($metadata.entrypoints.main) + @($metadata.entrypoints.client)) {
                     Assert-Release ($null -ne $archive.GetEntry($className.Replace('.', '/') + '.class')) "Missing Fabric entrypoint: $className"
                 }
+                Assert-Release ($metadata.accessWidener -eq 'hoppersadditions.accesswidener') 'Missing Fabric access widener declaration.'
+                $widener = Read-Entry $archive $metadata.accessWidener
+                Assert-Release ($widener -match 'accessWidener\s+v1\s+intermediary' -and $widener -match 'accessible\s+field\s+net/minecraft/class_2614\s+field_12023\s+I' -and $widener -match 'accessible\s+class\s+net/minecraft/class_2591\$class_5559' -and $widener.Contains('(Lnet/minecraft/class_2591$class_5559;Ljava/util/Set;)V')) 'Incomplete runtime access widener.'
                 $descriptor = Read-Entry $archive 'fabric.mod.json'
             } else {
+                $transformer = Read-Entry $archive 'META-INF/accesstransformer.cfg'
+                Assert-Release ($transformer -match 'BlockEntityType' -and $transformer -match 'cooldownTime' -and $transformer.Contains('<init>(Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V')) 'Incomplete NeoForge runtime access transformer.'
                 $descriptor = Read-Entry $archive 'META-INF/neoforge.mods.toml'
                 Assert-Release ($descriptor -match '(?m)^license\s*=\s*"GPL-3\.0-only"\s*$') 'Wrong NeoForge license.'
-                Assert-Release ($descriptor -match '(?m)^version\s*=\s*"0\.3"\s*$' -and $descriptor -match '(?m)^modId\s*=\s*"hoppersadditions"\s*$') 'Wrong NeoForge version/ID.'
-                $expected = @{ neoforge = '[21.1.220,21.2)'; minecraft = '[1.21.1,1.21.2)'; architectury = '[13.0.8,)' }
+                Assert-Release ($descriptor -match '(?m)^version\s*=\s*"0\.4\.0\+mc1\.21\.11"\s*$' -and $descriptor -match '(?m)^modId\s*=\s*"hoppersadditions"\s*$') 'Wrong NeoForge version/ID.'
+                $expected = @{ neoforge = '[21.11.48,21.12)'; minecraft = '[1.21.11]'; architectury = '[19.0.1,20)' }
                 $blocks = [regex]::Matches($descriptor, '(?s)\[\[dependencies\.hoppersadditions\]\](.*?)(?=\[\[|\z)')
                 foreach ($key in $expected.Keys) {
                     $block = @($blocks | Where-Object { $_.Groups[1].Value -match ('modId\s*=\s*"' + $key + '"') })
@@ -207,7 +229,7 @@ try {
         artifacts = @($artifacts)
         scope = 'Static package checks only; vanilla references and runtime registry/schema loading require live checks.'
         finalCommittedCandidate = 'NOT ESTABLISHED by this script; record a clean build from an authorized final commit.'
-        gameplay = 'UNVERIFIED; compare these hashes with issue #6 evidence.'
+        gameplay = 'UNVERIFIED; match these hashes with issue #8 runtime evidence.'
     }
     $parent = Split-Path ([IO.Path]::GetFullPath($OutputPath)) -Parent
     New-Item -ItemType Directory -Path $parent -Force | Out-Null

@@ -6,15 +6,9 @@
     " O "
   ],
   "key": {
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "C": {
-      "item": "minecraft:chest"
-    },
-    "O": {
-      "item": "minecraft:comparator"
-    }
+    "I": "minecraft:iron_ingot",
+    "C": "minecraft:chest",
+    "O": "minecraft:comparator"
   },
   "result": {
     "id": "hoppersadditions:filter_hopper",

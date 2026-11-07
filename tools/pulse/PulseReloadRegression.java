@@ -11,6 +11,11 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -21,7 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeAccess;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -57,23 +62,28 @@ public class PulseReloadRegression {
         private boolean powered;
         private BarrelBlockEntity target;
 
-        private TestLevel() { super(null, null, null, null, null, false, false, 0L, 0); }
+        protected TestLevel() { super(null, null, null, null, false, false, 0L, 0); }
         @Override public long getGameTime() { return this.time; }
         @Override public boolean hasNeighborSignal(BlockPos pos) { return this.powered; }
         @Override public BlockState getBlockState(BlockPos pos) { return Blocks.BARREL.defaultBlockState(); }
         @Override public BlockEntity getBlockEntity(BlockPos pos) { return this.target; }
         @Override public void sendBlockUpdated(BlockPos pos, BlockState before, BlockState after, int flags) { throw new UnsupportedOperationException(); }
-        @Override public void playSeededSound(Player player, double x, double y, double z, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, long seed) { throw new UnsupportedOperationException(); }
-        @Override public void playSeededSound(Player player, Entity entity, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, long seed) { throw new UnsupportedOperationException(); }
+        @Override public void playSeededSound(Entity player, double x, double y, double z, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, long seed) { throw new UnsupportedOperationException(); }
+        @Override public void playSeededSound(Entity player, Entity entity, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, long seed) { throw new UnsupportedOperationException(); }
+        @Override public net.minecraft.world.level.border.WorldBorder getWorldBorder() { throw new UnsupportedOperationException(); }
+        @Override public net.minecraft.world.level.block.entity.FuelValues fuelValues() { throw new UnsupportedOperationException(); }
+        @Override public net.minecraft.world.attribute.EnvironmentAttributeSystem environmentAttributes() { throw new UnsupportedOperationException(); }
+        @Override public void setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData data) { throw new UnsupportedOperationException(); }
+        @Override public net.minecraft.world.level.storage.LevelData.RespawnData getRespawnData() { throw new UnsupportedOperationException(); }
+        @Override public java.util.Collection<net.minecraft.world.entity.boss.enderdragon.EnderDragonPart> dragonParts() { throw new UnsupportedOperationException(); }
+        @Override public void explode(Entity entity, net.minecraft.world.damagesource.DamageSource damage, net.minecraft.world.level.ExplosionDamageCalculator calculator, double x, double y, double z, float radius, boolean fire, Level.ExplosionInteraction interaction, net.minecraft.core.particles.ParticleOptions small, net.minecraft.core.particles.ParticleOptions large, net.minecraft.util.random.WeightedList<net.minecraft.core.particles.ExplosionParticleInfo> particles, Holder<SoundEvent> sound) { throw new UnsupportedOperationException(); }
         @Override public String gatherChunkSourceStats() { throw new UnsupportedOperationException(); }
         @Override public Entity getEntity(int id) { throw new UnsupportedOperationException(); }
         @Override public TickRateManager tickRateManager() { throw new UnsupportedOperationException(); }
         @Override public MapItemSavedData getMapData(MapId id) { throw new UnsupportedOperationException(); }
-        @Override public void setMapData(MapId id, MapItemSavedData data) { throw new UnsupportedOperationException(); }
-        @Override public MapId getFreeMapId() { throw new UnsupportedOperationException(); }
         @Override public void destroyBlockProgress(int id, BlockPos pos, int progress) { throw new UnsupportedOperationException(); }
         @Override public Scoreboard getScoreboard() { throw new UnsupportedOperationException(); }
-        @Override public RecipeManager getRecipeManager() { throw new UnsupportedOperationException(); }
+        @Override public RecipeAccess recipeAccess() { throw new UnsupportedOperationException(); }
         @Override protected LevelEntityGetter<Entity> getEntities() { throw new UnsupportedOperationException(); }
         @Override public PotionBrewing potionBrewing() { throw new UnsupportedOperationException(); }
         @Override public LevelTickAccess<Block> getBlockTicks() { throw new UnsupportedOperationException(); }
@@ -86,7 +96,7 @@ public class PulseReloadRegression {
         @Override public long nextSubTickCount() { throw new UnsupportedOperationException(); }
         @Override public float getShade(Direction direction, boolean shade) { throw new UnsupportedOperationException(); }
         @Override public void gameEvent(Holder<net.minecraft.world.level.gameevent.GameEvent> event, net.minecraft.world.phys.Vec3 position, net.minecraft.world.level.gameevent.GameEvent.Context context) { throw new UnsupportedOperationException(); }
-        @Override public void levelEvent(Player player, int event, BlockPos pos, int data) { throw new UnsupportedOperationException(); }
+        @Override public void levelEvent(Entity player, int event, BlockPos pos, int data) { throw new UnsupportedOperationException(); }
     }
 
     private static void setField(Class<?> owner, Object target, String name, Object value) throws Exception {
@@ -123,17 +133,27 @@ public class PulseReloadRegression {
         return hopper;
     }
 
+    private static void saveTag(PulseHopperBlockEntity hopper, CompoundTag tag) throws Exception {
+        TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
+        save.invoke(hopper, output);
+        tag.merge(output.buildResult());
+    }
+
+    private static void loadTag(PulseHopperBlockEntity hopper, CompoundTag tag) throws Exception {
+        load.invoke(hopper, TagValueInput.create(ProblemReporter.DISCARDING, registries, tag));
+    }
+
     private static CompoundTag saved(boolean powered, int count) throws Exception {
         TestHopper hopper = hopper(level(powered), count);
         hopper.initializePower(powered);
         CompoundTag tag = new CompoundTag();
-        save.invoke(hopper, tag, registries);
+        saveTag(hopper, tag);
         return tag;
     }
 
     private static TestHopper reload(TestLevel level, CompoundTag tag) throws Exception {
         TestHopper restored = hopper(level, 0);
-        load.invoke(restored, tag, registries);
+        loadTag(restored, tag);
         return restored;
     }
 
@@ -181,8 +201,8 @@ public class PulseReloadRegression {
         unsafe.setAccessible(true);
         allocator = (Unsafe) unsafe.get(null);
         registries = RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY);
-        load = PulseHopperBlockEntity.class.getDeclaredMethod("loadAdditional", CompoundTag.class, HolderLookup.Provider.class);
-        save = PulseHopperBlockEntity.class.getDeclaredMethod("saveAdditional", CompoundTag.class, HolderLookup.Provider.class);
+        load = PulseHopperBlockEntity.class.getDeclaredMethod("loadAdditional", ValueInput.class);
+        save = PulseHopperBlockEntity.class.getDeclaredMethod("saveAdditional", ValueOutput.class);
         canCollect = PulseHopperBlockEntity.class.getDeclaredMethod("canCollect");
         finishCollection = PulseHopperBlockEntity.class.getDeclaredMethod("finishCollection", boolean.class);
         for (Method method : new Method[] {load, save, canCollect, finishCollection}) method.setAccessible(true);
@@ -216,7 +236,7 @@ public class PulseReloadRegression {
         check(count(level.target) == 0, "powered placement has no output");
         for (int cycle = 0; cycle < 3; cycle++) {
             CompoundTag tag = new CompoundTag();
-            save.invoke(hopper, tag, registries);
+            saveTag(hopper, tag);
             hopper = reload(level, tag);
             hopper.powerChanged(true);
             observe(hopper);
@@ -225,7 +245,7 @@ public class PulseReloadRegression {
         }
         check(count(level.target) == 0 && hopper.getItem(0).getCount() == 8, "repeated powered NBT reloads conserve inventory");
         level.powered = false;
-        load.invoke(hopper, saved(true, 8), registries);
+        loadTag(hopper, saved(true, 8));
         observe(hopper);
         level.time++;
         edge(level, hopper, true);
@@ -259,7 +279,7 @@ public class PulseReloadRegression {
         edge(level, hopper, true);
         check(count(level.target) == 1 && hopper.getItem(0).getCount() == 7, "duplicates and multiple same-tick edges deliver once");
         CompoundTag sameTick = new CompoundTag();
-        save.invoke(hopper, sameTick, registries);
+        saveTag(hopper, sameTick);
         hopper = reload(level, sameTick);
         observe(hopper);
         edge(level, hopper, false);
@@ -300,7 +320,7 @@ public class PulseReloadRegression {
         observe(hopper);
         finishCollection.invoke(hopper, true);
         CompoundTag cooldown = new CompoundTag();
-        save.invoke(hopper, cooldown, registries);
+        saveTag(hopper, cooldown);
         hopper = reload(level, cooldown);
         check(!observe(hopper), "input cooldown survives reload");
         check(field(hopper, "lastPowered").equals(false), "baseline established even during input cooldown");

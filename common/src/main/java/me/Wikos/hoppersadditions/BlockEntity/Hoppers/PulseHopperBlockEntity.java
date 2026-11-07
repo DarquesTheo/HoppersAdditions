@@ -1,11 +1,10 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -30,7 +29,7 @@ public class PulseHopperBlockEntity extends RandomizableContainerBlockEntity imp
     private long nextInputGameTime = Long.MIN_VALUE;
 
     public PulseHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.PULSE_HOPPER_ENTITY.get(), pos, state);
+        super(me.Wikos.hoppersadditions.Registration.PULSE_HOPPER_ENTITY.get(), pos, state);
     }
 
     public void initializePower(boolean powered) {
@@ -40,7 +39,7 @@ public class PulseHopperBlockEntity extends RandomizableContainerBlockEntity imp
     }
 
     public void powerChanged(boolean powered) {
-        if (this.level == null || this.level.isClientSide) {
+        if (this.level == null || this.level.isClientSide()) {
             return;
         }
         if (!this.powerInitialized) {
@@ -109,7 +108,7 @@ public class PulseHopperBlockEntity extends RandomizableContainerBlockEntity imp
     }
 
     private boolean canCollect() {
-        if (this.level == null || this.level.isClientSide) {
+        if (this.level == null || this.level.isClientSide()) {
             return false;
         }
         boolean powered = this.level.hasNeighborSignal(this.worldPosition);
@@ -127,23 +126,23 @@ public class PulseHopperBlockEntity extends RandomizableContainerBlockEntity imp
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.loadAdditional(tag, provider);
+    protected void loadAdditional(ValueInput tag) {
+        super.loadAdditional(tag);
         this.items = NonNullList.withSize(5, ItemStack.EMPTY);
         if (!this.tryLoadLootTable(tag)) {
-            ContainerHelper.loadAllItems(tag, this.items, provider);
+            ContainerHelper.loadAllItems(tag, this.items);
         }
         this.powerInitialized = false;
-        this.lastPowered = tag.getBoolean("PulseLastPowered");
-        this.lastPulseGameTime = tag.contains("PulseLastGameTime") ? tag.getLong("PulseLastGameTime") : Long.MIN_VALUE;
-        this.nextInputGameTime = tag.contains("PulseNextInputGameTime") ? tag.getLong("PulseNextInputGameTime") : Long.MIN_VALUE;
+        this.lastPowered = tag.getBooleanOr("PulseLastPowered", false);
+        this.lastPulseGameTime = tag.getLongOr("PulseLastGameTime", Long.MIN_VALUE);
+        this.nextInputGameTime = tag.getLongOr("PulseNextInputGameTime", Long.MIN_VALUE);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        super.saveAdditional(tag, provider);
+    protected void saveAdditional(ValueOutput tag) {
+        super.saveAdditional(tag);
         if (!this.trySaveLootTable(tag)) {
-            ContainerHelper.saveAllItems(tag, this.items, provider);
+            ContainerHelper.saveAllItems(tag, this.items);
         }
         tag.putBoolean("PulsePowerInitialized", this.powerInitialized);
         tag.putBoolean("PulseLastPowered", this.lastPowered);

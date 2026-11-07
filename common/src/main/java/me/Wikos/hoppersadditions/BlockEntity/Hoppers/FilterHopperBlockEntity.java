@@ -1,7 +1,6 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -18,7 +17,7 @@ public class FilterHopperBlockEntity extends ModdedHopperBlockEntity {
     public static final int FILTER_SLOT = 4;
 
     public FilterHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.FILTER_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
+        super(me.Wikos.hoppersadditions.Registration.FILTER_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, FilterHopperBlockEntity blockEntity) {
@@ -28,7 +27,7 @@ public class FilterHopperBlockEntity extends ModdedHopperBlockEntity {
         if (!blockEntity.isOnCooldown()) {
             blockEntity.setCooldown(0);
 
-            if (!level.isClientSide && state.getValue(HopperBlock.ENABLED)) {
+            if (!level.isClientSide() && state.getValue(HopperBlock.ENABLED)) {
                 boolean changed = false;
 
                 if (!blockEntity.isEmpty()) {

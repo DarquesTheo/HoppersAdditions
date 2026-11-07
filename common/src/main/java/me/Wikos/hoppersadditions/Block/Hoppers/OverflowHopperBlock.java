@@ -56,23 +56,23 @@ public class OverflowHopperBlock extends ModdedHopperBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.OVERFLOW_HOPPER_ENTITY.get(), OverflowHopperBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(type, Registration.OVERFLOW_HOPPER_ENTITY.get(), OverflowHopperBlockEntity::tick);
     }
 
     @Override
-    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, net.minecraft.world.entity.InsideBlockEffectApplier effects, boolean applyEffects) {
         if (level.getBlockEntity(pos) instanceof OverflowHopperBlockEntity hopper) {
             hopper.collectItem(level, pos, state, entity);
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.overflow_hopper.description")
                 .withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.translatable("tooltip.hoppersadditions.hopper.speed")
                 .append(Component.literal(": 1x"))
                 .withStyle(ChatFormatting.GOLD));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHopperTooltip(stack, context, tooltipComponents, tooltipFlag);
     }
 }

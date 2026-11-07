@@ -1,11 +1,10 @@
 package me.Wikos.hoppersadditions.BlockEntity.Hoppers;
 
 import me.Wikos.hoppersadditions.BlockEntity.ModdedHopperBlockEntity;
-import me.Wikos.hoppersadditions.Registration;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -36,7 +35,7 @@ public class PickaxeHopperBlockEntity extends ModdedHopperBlockEntity {
     private int fortuneLevel = 0;
 
     public PickaxeHopperBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.PICKAXE_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
+        super(me.Wikos.hoppersadditions.Registration.PICKAXE_HOPPER_ENTITY.get(), pos, state, MOVE_ITEM_SPEED);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, PickaxeHopperBlockEntity blockEntity) {
@@ -53,19 +52,19 @@ public class PickaxeHopperBlockEntity extends ModdedHopperBlockEntity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+    protected void saveAdditional(ValueOutput compoundTag) {
         compoundTag.putFloat("BreakProgress", this.breakProgress);
         compoundTag.putInt("EfficiencyLevel", this.efficiencyLevel);
         compoundTag.putInt("FortuneLevel", this.fortuneLevel);
-        super.saveAdditional(compoundTag, provider);
+        super.saveAdditional(compoundTag);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
-        this.breakProgress = compoundTag.getFloat("BreakProgress");
-        this.efficiencyLevel = compoundTag.getInt("EfficiencyLevel");
-        this.fortuneLevel = compoundTag.getInt("FortuneLevel");
+    protected void loadAdditional(ValueInput compoundTag) {
+        super.loadAdditional(compoundTag);
+        this.breakProgress = compoundTag.getFloatOr("BreakProgress", 0.0F);
+        this.efficiencyLevel = compoundTag.getIntOr("EfficiencyLevel", 0);
+        this.fortuneLevel = compoundTag.getIntOr("FortuneLevel", 0);
     }
 
     public void damageBlockAbove(Level level, BlockPos pos)

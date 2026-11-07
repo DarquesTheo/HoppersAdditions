@@ -26,11 +26,11 @@ function Read-ArchiveText {
 Push-Location $repository
 try {
     $env:PATH = "$env:JAVA_HOME/bin;$env:PATH"
-    $output = Join-Path $repository ("build/issue6-evidence/" + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8))
+    $output = Join-Path $repository ("build/issue8-evidence/" + (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 8))
     New-Item -ItemType Directory -Path $output -Force | Out-Null
     Invoke-LoggedCommand "$env:JAVA_HOME/bin/java.exe" @('--version') "$output/java.log"
     Invoke-LoggedCommand './gradlew.bat' @('--version') "$output/gradle.log"
-    Invoke-LoggedCommand './gradlew.bat' @(':common:build', ':fabric:build', ':neoforge:build', '--console=plain') "$output/build.log"
+    Invoke-LoggedCommand './gradlew.bat' @('clean', ':common:build', ':fabric:build', ':neoforge:build', '--console=plain') "$output/build.log"
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $properties = ConvertFrom-StringData (Get-Content gradle.properties -Raw)
@@ -42,10 +42,10 @@ try {
             $descriptor = Read-ArchiveText $archive $descriptorPath
             if ($loader -eq 'fabric') {
                 $metadata = $descriptor | ConvertFrom-Json
-                if ($metadata.version -ne '0.3' -or $metadata.depends.minecraft -ne '>=1.21.1 <1.21.2') {
+                if ($metadata.version -ne $properties.mod_version -or $metadata.depends.minecraft -ne '=1.21.11') {
                     throw 'Unexpected packaged Fabric version or Minecraft range.'
                 }
-            } elseif ($descriptor -notmatch 'version\s*=\s*"0\.3"' -or $descriptor -notmatch '\[1\.21\.1,1\.21\.2\)' -or $descriptor -notmatch '\[21\.1\.220,21\.2\)') {
+            } elseif ($descriptor -notmatch 'version\s*=\s*"0\.4\.0\+mc1\.21\.11"' -or $descriptor -notmatch '\[1\.21\.11\]' -or $descriptor -notmatch '\[21\.11\.48,21\.12\)') {
                 throw 'Unexpected packaged NeoForge version or compatibility ranges.'
             }
             $descriptor | Set-Content "$output/$loader-descriptor.txt" -Encoding UTF8
@@ -91,6 +91,9 @@ try {
         } finally { $archive.Dispose() }
     }
 
+    & "$PSScriptRoot/Verify-ReleaseArtifacts.ps1" -OutputPath "$output/artifacts.json"
+    Invoke-LoggedCommand './gradlew.bat' @('-I', 'tools/pulse-regression.gradle', ':common:pulseRegression', '--console=plain') "$output/regressions.log"
+
     $sourceFiles = foreach ($path in (& git ls-files --cached --others --exclude-standard)) {
         if (Test-Path -LiteralPath $path -PathType Leaf) {
             [ordered]@{ path = $path; sha256 = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash }
@@ -110,8 +113,8 @@ try {
         sourceFiles = @($sourceFiles)
         buildAndPackage = 'PASS'
         dedicatedServerStartup = 'UNVERIFIED: record separate runtime logs and Ready/Done state'
-        clientGameplay = 'UNVERIFIED: use the per-loader matrix in docs/v0.3-live-validation.md'
-        worldUpgrade = 'UNVERIFIED: needs a backed-up representative 0.2 world'
+        clientGameplay = 'UNVERIFIED: use the per-loader matrix in docs/1.21.11-migration.md'
+        worldUpgrade = 'UNVERIFIED: needs a backed-up representative 1.21.1 world'
     }
     $evidence | ConvertTo-Json -Depth 8 | Set-Content "$output/candidate.json" -Encoding UTF8
     Write-Host "Build/package evidence only: $output/candidate.json"

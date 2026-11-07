@@ -37,13 +37,13 @@ public class BatchHopperBlock extends ModdedHopperBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, Registration.BATCH_HOPPER_ENTITY.get(), me.Wikos.hoppersadditions.BlockEntity.Hoppers.BatchHopperBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(type, Registration.BATCH_HOPPER_ENTITY.get(), me.Wikos.hoppersadditions.BlockEntity.Hoppers.BatchHopperBlockEntity::tick);
     }
 
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHopperTooltip(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         String key = this.batchAmount == 8 ? "tooltip.hoppersadditions.small_batch_hopper.description" : "tooltip.hoppersadditions.batch_hopper.description";
         tooltipComponents.add(Component.translatable(key)
                 .withStyle(ChatFormatting.GRAY));
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHopperTooltip(stack, context, tooltipComponents, tooltipFlag);
     }
 }
