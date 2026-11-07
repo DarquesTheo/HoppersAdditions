@@ -107,6 +107,18 @@ try {
             Assert-Release (@($names | Group-Object | Where-Object Count -gt 1).Count -eq 0) "Duplicate ZIP entries: $path"
             $unexpected = @($names | Where-Object { $_ -match '(^|/)(logs?|tools|\.git|\.idea|\.env)(/|$)|\.(log|log\.gz|java|ps1|key|pem)$' })
             Assert-Release ($unexpected.Count -eq 0) "Unexpected development/private content: $unexpected"
+            $testContent = @($names | Where-Object {
+                $_ -match '(?i)(gametest|test_instance|test_environment|HopperGameTests|FabricTests|NeoForgeTests|junit|mockito|testng)'
+            })
+            Assert-Release ($testContent.Count -eq 0) "Test-only content leaked into production JAR: $testContent"
+            foreach ($nested in @($archive.Entries | Where-Object FullName -like '*.jar')) {
+                $nestedStream = $nested.Open()
+                $nestedArchive = [IO.Compression.ZipArchive]::new($nestedStream, [IO.Compression.ZipArchiveMode]::Read)
+                try {
+                    $nestedTests = @($nestedArchive.Entries.FullName | Where-Object { $_ -match '(?i)(gametest|junit|mockito|testng)' })
+                    Assert-Release ($nestedTests.Count -eq 0) "Test-only dependency leaked into $($nested.FullName): $nestedTests"
+                } finally { $nestedArchive.Dispose(); $nestedStream.Dispose() }
+            }
             foreach ($resource in $sourceResources) {
                 $entryPath = $resource.FullName.Substring($sourceRoot.Length + 1).Replace('\', '/')
                 $entry = $archive.GetEntry($entryPath)

@@ -1,0 +1,125 @@
+import groovy.json.JsonOutput
+import java.util.zip.GZIPOutputStream
+
+def testNamespace = 'hoppersadditions_gametest'
+def generatedResources = layout.buildDirectory.dir('generated/gametest')
+def manifest = rootProject.file('tools/gametest/scenarios.json')
+
+sourceSets {
+    gametest {
+        java.srcDirs rootProject.file('tools/gametest/java'), 'src/gametest/java'
+        resources.srcDir generatedResources
+        resources.srcDir rootProject.file('tools/gametest/resources')
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+}
+
+configurations {
+    gametestImplementation.extendsFrom implementation
+    gametestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+def generateFixtures = tasks.register('generateGameTestFixtures') {
+    inputs.file manifest
+    outputs.dir generatedResources
+    doLast {
+        def root = generatedResources.get().asFile
+        def scenarios = new groovy.json.JsonSlurper().parse(manifest)
+        def instanceDirectory = new File(root, "data/$testNamespace/test_instance")
+        def expectedFiles = scenarios.collect { it.id + '.json' }
+        instanceDirectory.listFiles()?.findAll { it.isFile() && !expectedFiles.contains(it.name) }?.each {
+            if (!it.delete()) { throw new GradleException("Cannot remove stale test instance: $it") }
+        }
+        scenarios.each { scenario ->
+            def target = new File(root, "data/$testNamespace/test_instance/" + scenario.id + '.json')
+            target.parentFile.mkdirs()
+            target.text = JsonOutput.prettyPrint(JsonOutput.toJson([
+                type: 'minecraft:function', function: "$testNamespace:" + scenario.id,
+                environment: 'minecraft:default', structure: "$testNamespace:empty",
+                max_ticks: 240, setup_ticks: 1, required: true, max_attempts: 1
+            ]))
+        }
+        def structure = new File(root, "data/$testNamespace/structure/empty.nbt")
+        structure.parentFile.mkdirs()
+        new DataOutputStream(new GZIPOutputStream(new FileOutputStream(structure))).withCloseable { output ->
+            output.writeByte(10); output.writeUTF('')
+            output.writeByte(3); output.writeUTF('DataVersion'); output.writeInt(4671)
+            output.writeByte(9); output.writeUTF('size'); output.writeByte(3); output.writeInt(3)
+            [12, 8, 12].each { output.writeInt(it) }
+            output.writeByte(9); output.writeUTF('palette'); output.writeByte(10); output.writeInt(1)
+            output.writeByte(8); output.writeUTF('Name'); output.writeUTF('minecraft:air'); output.writeByte(0)
+            ['blocks', 'entities'].each { name ->
+                output.writeByte(9); output.writeUTF(name); output.writeByte(10); output.writeInt(0)
+            }
+            output.writeByte(0)
+        }
+        if (project.name == 'fabric') {
+            new File(root, 'fabric.mod.json').text = JsonOutput.toJson([
+                schemaVersion: 1, id: testNamespace, version: '1.0.0', environment: '*',
+                entrypoints: [main: ['me.Wikos.hoppersadditions.gametest.FabricTests']],
+                depends: [hoppersadditions: '*', 'fabric-api': '*']
+            ])
+        } else {
+            def descriptor = new File(root, 'META-INF/neoforge.mods.toml')
+            descriptor.parentFile.mkdirs()
+            descriptor.text = '''modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0-only"
+[[mods]]
+modId="hoppersadditions_gametest"
+version="1.0.0"
+displayName="Hoppers Additions GameTests (development only)"
+'''
+        }
+    }
+}
+
+tasks.named('processGametestResources') { dependsOn generateFixtures }
+
+loom {
+    mods {
+        hoppersadditions {
+            sourceSet sourceSets.main
+            if (project.name == 'fabric') { sourceSet project(':common').sourceSets.main }
+        }
+        hoppersadditions_gametest { sourceSet sourceSets.gametest }
+    }
+    runs {
+        gameTest {
+            server()
+            if (project.name == 'neoforge') {
+                forgeTemplate('gameTestServer')
+                mainClass.set('net.neoforged.fml.startup.GameTestServer')
+            }
+            source sourceSets.gametest
+            runDir 'build/gametest/run'
+            ideConfigGenerated false
+            def report = layout.buildDirectory.file('gametest/results.xml').get().asFile.absolutePath
+            def selector = providers.gradleProperty('gameTestFilter').getOrElse('hoppersadditions_gametest:*')
+            if (project.name == 'fabric') {
+                property 'fabric-api.gametest', 'true'
+                property 'fabric-api.gametest.report-file', report
+                property 'fabric-api.gametest.filter', selector
+            } else {
+                programArgs '--report', report, '--tests', selector
+            }
+            if (providers.gradleProperty('gameTestControlledFailure').isPresent()) {
+                property 'hoppers.gametest.controlledFailure', 'true'
+            }
+        }
+    }
+}
+
+tasks.named('runGameTest') {
+    timeout = Duration.ofMinutes(5)
+    dependsOn tasks.named('gametestClasses')
+    doFirst {
+        if (providers.gradleProperty('gameTestEulaAccepted').getOrElse('false') != 'true') {
+            throw new GradleException('GameTest runners bypass the server EULA prompt. Read the Minecraft EULA and explicitly authorize this run with -PgameTestEulaAccepted=true. No server was started.')
+        }
+        def report = layout.buildDirectory.file('gametest/results.xml').get().asFile
+        report.parentFile.mkdirs()
+        if (report.exists() && !report.delete()) { throw new GradleException("Cannot remove stale report: $report") }
+    }
+}

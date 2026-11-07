@@ -7,7 +7,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $properties = ConvertFrom-StringData (Get-Content (Join-Path $repository 'gradle.properties') -Raw)
 $verifier = Join-Path $PSScriptRoot 'Verify-ReleaseArtifacts.ps1'
 & $verifier -OutputPath (Join-Path $OutputRoot 'valid.json')
-$cases = @('missing-license', 'missing-class', 'wrong-bytecode', 'missing-item-definition', 'legacy-recipe', 'wrong-metadata', 'missing-access-rule')
+$cases = @('missing-license', 'missing-class', 'wrong-bytecode', 'missing-item-definition', 'legacy-recipe', 'wrong-metadata', 'missing-access-rule', 'test-class', 'test-fixture', 'test-dependency')
 $results = foreach ($loader in @('fabric', 'neoforge')) {
     foreach ($case in $cases) {
         $fixtureRoot = Join-Path $OutputRoot "$loader-$case"
@@ -19,6 +19,24 @@ $results = foreach ($loader in @('fabric', 'neoforge')) {
         $jarPath = Join-Path $fixtureRoot "$loader/build/libs/hoppers-additions-$loader-$($properties.mod_version).jar"
         $archive = [IO.Compression.ZipFile]::Open($jarPath, [IO.Compression.ZipArchiveMode]::Update)
         try {
+            if ($case -like 'test-*') {
+                $entryPath = switch ($case) {
+                    'test-class' { 'me/Wikos/hoppersadditions/gametest/HopperGameTests.class' }
+                    'test-fixture' { 'data/hoppersadditions_gametest/test_instance/leaked.json' }
+                    'test-dependency' { 'META-INF/jarjar/helper.jar' }
+                }
+                $bytes = [Text.Encoding]::UTF8.GetBytes('{}')
+                if ($case -eq 'test-dependency') {
+                    $memory = [IO.MemoryStream]::new()
+                    $nested = [IO.Compression.ZipArchive]::new($memory, [IO.Compression.ZipArchiveMode]::Create, $true)
+                    $nested.CreateEntry('org/junit/Test.class') | Out-Null
+                    $nested.Dispose()
+                    $bytes = $memory.ToArray()
+                    $memory.Dispose()
+                }
+                $stream = $archive.CreateEntry($entryPath).Open()
+                try { $stream.Write($bytes, 0, $bytes.Length) } finally { $stream.Dispose() }
+            } else {
             $entryPath = switch ($case) {
                 'missing-license' { 'LICENSE' }
                 'missing-class' { 'me/Wikos/hoppersadditions/Registration.class' }
@@ -48,6 +66,7 @@ $results = foreach ($loader in @('fabric', 'neoforge')) {
             if ($case -in @('wrong-bytecode', 'legacy-recipe', 'wrong-metadata')) {
                 $stream = $archive.CreateEntry($entryPath).Open()
                 try { $stream.Write($bytes, 0, $bytes.Length) } finally { $stream.Dispose() }
+            }
             }
         } finally { $archive.Dispose() }
         $report = Join-Path $fixtureRoot 'result.json'

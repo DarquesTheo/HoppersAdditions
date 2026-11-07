@@ -63,6 +63,27 @@ The Unix launcher is included, but this setup has only been validated on Windows
 - Release version: `0.4.0+mc1.21.11`; the game target is explicit in both distributable names.
 - Verify the normal remapped JARs with `./tools/release/Verify-ReleaseArtifacts.ps1`. Build/package success alone does not prove farm behavior or item conservation.
 
+## Automated world tests
+
+See [GameTest coverage, commands and limitations](docs/gametest.md). Compile the
+test-only sources with the documented JDK 21 and wrapper:
+
+```powershell
+./gradlew.bat :fabric:gametestClasses :neoforge:gametestClasses --console=plain
+```
+
+After reading the Minecraft EULA and explicitly authorizing disposable test
+servers, run both loaders with one command:
+
+```powershell
+./tools/gametest/Run-GameTests.ps1 -EulaAccepted -ValidateGuards
+```
+
+This command fails on required failures, missing/zero project tests and skipped
+tests. It does not establish rendering/UI correctness, genuine world reloads,
+historical-world upgrades, or release readiness. CI requires explicit maintainer
+EULA authorization; it does not silently accept it or skip required world tests.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the GitHub issue/PR workflow,
