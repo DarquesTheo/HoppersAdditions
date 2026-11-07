@@ -55,12 +55,13 @@ public class FilterHopperBlockEntity extends ModdedHopperBlockEntity {
         for (int i = 0; i < 4; i++) {
             ItemStack stack = hopper.getItem(i);
             if (!stack.isEmpty()) {
+                ItemStack original = stack.copy();
                 ItemStack moved = addItem(hopper, target, hopper.removeItem(i, 1), facingSide);
                 if (moved.isEmpty()) {
                     target.setChanged();
                     return true;
                 }
-                hopper.setItem(i, stack);
+                hopper.setItem(i, original);
             }
         }
         return false;

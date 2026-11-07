@@ -1,6 +1,8 @@
 import java.lang.reflect.Method;
 import me.Wikos.hoppersadditions.BlockEntity.Hoppers.FilterHopperBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -19,18 +21,31 @@ public final class BlockedFilterRegression {
         Method createHopper = HopperMigrationRegression.class.getDeclaredMethod("hopper", Class.class, HopperMigrationRegression.RoutingLevel.class, int.class);
         createHopper.setAccessible(true);
         FilterHopperBlockEntity source = (FilterHopperBlockEntity) createHopper.invoke(null, HopperMigrationRegression.Filter.class, level, 3);
-        source.setItem(4, new ItemStack(Items.STONE));
+        ItemStack original = new ItemStack(Items.STONE, 3);
+        original.set(DataComponents.CUSTOM_NAME, Component.literal("blocked source"));
+        source.setItem(0, original.copy());
+        source.setItem(4, original.copyWithCount(1));
         Method eject = FilterHopperBlockEntity.class.getDeclaredMethod("ejectFiltered", Level.class, BlockPos.class, FilterHopperBlockEntity.class);
         eject.setAccessible(true);
-        boolean moved = (boolean) eject.invoke(null, level, BlockPos.ZERO, source);
+        for (int attempt = 0; attempt < 3; attempt++) {
+            assertBlocked(source, target, original, (boolean) eject.invoke(null, level, BlockPos.ZERO, source), 3);
+        }
+        source.setItem(0, original.copyWithCount(1));
+        assertBlocked(source, target, original, (boolean) eject.invoke(null, level, BlockPos.ZERO, source), 1);
+        System.out.println("PASS: repeated blocked Filter rollback preserves counts, components and prototype (isolated regression only).");
+    }
+
+    private static void assertBlocked(FilterHopperBlockEntity source, Container target, ItemStack original, boolean moved, int expected) {
         int actual = count(source) + count(target);
-        if (moved || actual != 4 || source.getItem(0).getCount() != 3) {
-            throw new AssertionError("Blocked Filter conservation: expected source=3 + prototype=1, target=0, moved=false; actual source="
+        if (moved || actual != expected + 1 || source.getItem(0).getCount() != expected
+                || source.getItem(4).getCount() != 1 || count(target) != 0
+                || !ItemStack.isSameItemSameComponents(source.getItem(0), original)
+                || !ItemStack.isSameItemSameComponents(source.getItem(4), original)) {
+            throw new AssertionError("Blocked Filter conservation: expected source=" + expected + " + prototype=1, target=0, moved=false; actual source="
                     + source.getItem(0).getCount() + ", prototype=" + source.getItem(4).getCount()
                     + ", target=" + count(target) + ", moved=" + moved
                     + ". Production method, fake level/real containers; NOT an in-world GameTest.");
         }
-        System.out.println("PASS: blocked Filter rollback conserves all four items (isolated regression only).");
     }
 
     private static int count(Container inventory) {

@@ -262,6 +262,9 @@ public final class HopperGameTests {
         helper.runAfterDelay(12, () -> {
             expect(helper, count(output), 0, "sided furnace rejects diamonds");
             expect(helper, source.getItem(0).getCount(), 3, "blocked filter output retains complete stack");
+            expect(helper, source.getItem(4).getCount(), 1, "blocked filter retains reference");
+            helper.assertTrue(ItemStack.isSameItemSameComponents(source.getItem(0), named(1, "not fuel")), "Blocked source components preserved");
+            helper.assertTrue(ItemStack.isSameItemSameComponents(source.getItem(4), named(1, "not fuel")), "Blocked reference components preserved");
             expect(helper, count(source) + count(output), 4, "blocked filter conservation including prototype");
             helper.succeed();
         });
