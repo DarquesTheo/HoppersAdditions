@@ -12,7 +12,7 @@ if (!$EulaAccepted) {
 $repository = Split-Path (Split-Path $PSScriptRoot -Parent) -Parent
 $gradle = if ($env:OS -eq 'Windows_NT') { Join-Path $repository 'gradlew.bat' } else { Join-Path $repository 'gradlew' }
 $launcher = if ($env:OS -eq 'Windows_NT') { $gradle } else { 'sh' }
-$prefix = if ($env:OS -eq 'Windows_NT') { @() } else { @($gradle) }
+$prefix = @(if ($env:OS -ne 'Windows_NT') { $gradle })
 $loaders = if ($Loader -eq 'both') { @('fabric', 'neoforge') } else { @($Loader) }
 
 function Invoke-Suite {

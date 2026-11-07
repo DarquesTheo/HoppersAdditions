@@ -37,6 +37,7 @@ jobs:
           ./tools/release/Verify-ReleaseArtifacts.ps1
           ./tools/release/Test-ReleaseArtifacts.ps1
           ./tools/gametest/Test-ResultGate.ps1
+          ./tools/gametest/Test-RunnerInvocation.ps1
       - name: Run real Minecraft suite and failure/discovery probes
         shell: pwsh
         env:
